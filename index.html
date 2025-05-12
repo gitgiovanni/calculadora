@@ -15,18 +15,6 @@
             --success: #2ec4b6;
             --warning: #ff9f1c;
             --error: #e71d36;
-            --background: #f8f9fa;
-            --text: #2b2d42;
-        }
-
-        [data-theme="dark"] {
-            --primary: #6c63ff;
-            --secondary: #564fcc;
-            --accent: #7ad0f0;
-            --dark: #f8f9fa;
-            --light: #2b2d42;
-            --background: #1a1b26;
-            --text: #f8f9fa;
         }
 
         * {
@@ -34,7 +22,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
@@ -42,12 +29,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: var(--background);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             padding: 2rem;
         }
 
         .calculator {
-            background: var(--light);
+            background: white;
             padding: 2.5rem;
             border-radius: 1.5rem;
             box-shadow: 
@@ -58,113 +45,244 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease;
-            color: var(--text);
         }
 
-        /* (Mantido o CSS anterior e adicionadas as novas classes abaixo) */
+        .calculator:hover {
+            transform: translateY(-5px);
+        }
 
-        .theme-toggle {
+        .calculator::before {
+            content: '';
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text);
-            font-size: 1.5rem;
-        }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 1.8rem;
-        }
-
-        .floating-label {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            transition: all 0.3s ease;
-            color: #adb5bd;
-            background: var(--light);
-            padding: 0 0.5rem;
-        }
-
-        input:focus + .floating-label,
-        input:not(:placeholder-shown) + .floating-label {
             top: 0;
-            font-size: 0.8rem;
-            color: var(--primary);
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
         }
 
-        .validation-icon {
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            gap: 1rem;
+        }
+
+        .header i {
+            font-size: 2.2rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            color: var(--dark);
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            font-weight: 400;
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .input-icon {
             position: absolute;
             right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            display: none;
+            top: 2.6rem;
+            color: #adb5bd;
         }
 
-        .input-valid .validation-icon {
-            display: block;
-            color: var(--success);
+        button {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .input-invalid .validation-icon {
-            display: block;
-            color: var(--error);
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
         }
 
-        .history-section {
-            margin-top: 2rem;
-            max-height: 200px;
-            overflow-y: auto;
+        button:active {
+            transform: translateY(0);
         }
 
-        .history-item {
-            padding: 0.8rem;
-            background: rgba(0,0,0,0.05);
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ripple {
+        button::after {
+            content: '';
             position: absolute;
-            background: rgba(255,255,255,0.5);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            border-radius: 50%;
-            animation: rippleEffect 0.6s linear;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0.1)
+            );
+            transform: rotate(30deg);
+            transition: all 0.3s ease;
         }
 
-        @keyframes rippleEffect {
-            0% { width: 0; height: 0; opacity: 1; }
-            100% { width: 400px; height: 400px; opacity: 0; }
+        button:hover::after {
+            left: 100%;
         }
 
-        .advanced-result {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0,0,0,0.05);
-            border-radius: 0.5rem;
+        .result {
+            margin-top: 2.5rem;
+            padding: 1.8rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 0.8rem;
+            text-align: center;
             display: none;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
         }
 
-        .advanced-result.active {
+        .result.active {
             display: block;
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        .result h2 {
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            color: var(--success);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .result-unit {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .water-mark {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: rgba(0,0,0,0.05);
+            font-size: 5rem;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 1.8rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .water-mark {
+                font-size: 3rem;
+                bottom: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+
+        /* Efeito de onda animado */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(67, 97, 238, 0.1)" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-repeat: no-repeat;
+            animation: wave 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <button class="theme-toggle" id="themeToggle">
-            <i class="fas fa-moon"></i>
-        </button>
-        
+        <div class="wave"></div>
         <div class="header">
             <i class="fas fa-water"></i>
             <div>
@@ -172,132 +290,82 @@
                 <p class="subtitle">Cálculo de vazão para sistemas de recalque</p>
             </div>
         </div>
-
-        <div class="input-wrapper">
-            <input type="number" id="population" placeholder=" ">
-            <label class="floating-label">População Atendida (hab)</label>
-            <i class="fas fa-check validation-icon"></i>
+        
+        <div class="input-group">
+            <label for="population"><i class="fas fa-users" style="margin-right: 8px;"></i> População Atendida (hab)</label>
+            <input type="number" id="population" placeholder="Ex: 15000">
+            <i class="fas fa-user input-icon"></i>
         </div>
 
-        <div class="input-wrapper">
-            <input type="number" id="consumption" placeholder=" ">
-            <label class="floating-label">Consumo per capita (L/dia)</label>
-            <i class="fas fa-check validation-icon"></i>
+        <div class="input-group">
+            <label for="consumption"><i class="fas fa-tint" style="margin-right: 8px;"></i> Consumo per capita (L/dia)</label>
+            <input type="number" id="consumption" placeholder="Ex: 200">
+            <i class="fas fa-glass-water input-icon"></i>
         </div>
 
-        <div class="input-wrapper">
-            <input type="number" id="time" placeholder=" ">
-            <label class="floating-label">Tempo de Operação (h/dia)</label>
-            <i class="fas fa-check validation-icon"></i>
+        <div class="input-group">
+            <label for="time"><i class="fas fa-clock" style="margin-right: 8px;"></i> Tempo de Operação (h/dia)</label>
+            <input type="number" id="time" placeholder="Ex: 16">
+            <i class="fas fa-hourglass input-icon"></i>
         </div>
 
-        <button onclick="calculate(event)">
-            <i class="fas fa-calculator"></i> Calcular Vazão
+        <button onclick="calculate()">
+            <i class="fas fa-calculator" style="margin-right: 10px;"></i> Calcular Vazão
         </button>
 
         <div class="result" id="result">
             <h2>Vazão Necessária</h2>
             <div class="result-value" id="result-value">0,000000</div>
             <p class="result-unit">metros cúbicos por segundo (m³/s)</p>
-            
-            <div class="advanced-result" id="advancedResult">
-                <p>Demanda Diária: <span id="dailyDemand">0</span> m³/dia</p>
-                <p>Vazão Horária: <span id="hourlyFlow">0</span> L/h</p>
-            </div>
         </div>
 
-        <div class="history-section" id="historySection">
-            <h3>Histórico</h3>
-            <div id="historyList"></div>
+        <div class="water-mark">
+            <i class="fas fa-droplet"></i>
         </div>
     </div>
 
     <script>
-        // Controle do Tema
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.dataset.theme = 
-                document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-            themeToggle.innerHTML = document.body.dataset.theme === 'dark' 
-                ? '<i class="fas fa-sun"></i>' 
-                : '<i class="fas fa-moon"></i>';
-        });
-
-        // Efeito Ripple
-        function createRipple(e) {
-            const btn = e.currentTarget;
-            const ripple = document.createElement('div');
-            ripple.className = 'ripple';
-            ripple.style.left = e.clientX - btn.offsetLeft + 'px';
-            ripple.style.top = e.clientY - btn.offsetTop + 'px';
-            btn.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        }
-
-        // Validação em Tempo Real
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', function() {
-                const wrapper = this.parentElement;
-                wrapper.classList.remove('input-valid', 'input-invalid');
-                if(this.value > 0) {
-                    wrapper.classList.add('input-valid');
-                } else if(this.value.length > 0) {
-                    wrapper.classList.add('input-invalid');
-                }
-            });
-        });
-
-        // Histórico de Cálculos
-        let history = JSON.parse(localStorage.getItem('hydrocalcHistory')) || [];
-        
-        function updateHistory(q, details) {
-            history.unshift({ 
-                date: new Date().toLocaleString(),
-                value: q,
-                details: details
-            });
-            if(history.length > 5) history.pop();
-            localStorage.setItem('hydrocalcHistory', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            list.innerHTML = history.map(item => `
-                <div class="history-item">
-                    <div>${item.date}</div>
-                    <div>${item.value.toFixed(6)} m³/s</div>
-                </div>
-            `).join('');
-        }
-
-        // Cálculo Aprimorado
-        function calculate(e) {
-            createRipple(e);
-            
+        function calculate() {
+            // Obter valores dos inputs
             const population = parseFloat(document.getElementById('population').value);
             const consumption = parseFloat(document.getElementById('consumption').value);
             const time = parseFloat(document.getElementById('time').value);
 
-            if([population, consumption, time].some(v => v <= 0)) {
-                showError('Valores inválidos!');
+            // Validar entradas
+            if (!population || !consumption || !time) {
+                showError('Por favor, preencha todos os campos!');
                 return;
             }
 
-            const dailyDemand = population * consumption / 1000;
-            const q = dailyDemand / (time * 3600);
+            if (population <= 0 || consumption <= 0 || time <= 0) {
+                showError('Os valores devem ser maiores que zero!');
+                return;
+            }
+
+            // Calcular vazão
+            const dailyDemand = population * consumption; // Litros/dia
+            const q = dailyDemand / (time * 3600); // Conversão para m³/s
+
+            // Exibir resultado
+            const result = document.getElementById('result');
+            const resultValue = document.getElementById('result-value');
             
-            document.getElementById('result-value').textContent = q.toFixed(6);
-            document.getElementById('dailyDemand').textContent = dailyDemand.toFixed(2);
-            document.getElementById('hourlyFlow').textContent = (q * 3600 * 1000).toFixed(2);
-            
-            document.getElementById('advancedResult').classList.add('active');
-            document.getElementById('result').classList.add('active');
-            
-            updateHistory(q, { population, consumption, time });
+            resultValue.textContent = q.toFixed(6).replace('.', ',');
+            result.classList.add('active');
         }
 
-        // Restante do código mantido com adaptações...
+        function showError(message) {
+            const result = document.getElementById('result');
+            const resultValue = document.getElementById('result-value');
+            
+            resultValue.textContent = message;
+            resultValue.style.color = 'var(--error)';
+            result.classList.add('active');
+            
+            setTimeout(() => {
+                resultValue.style.color = 'var(--success)';
+            }, 2000);
+        }
     </script>
 </body>
 </html>
