@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Recalque</title>
+    <title>HydroCalc | Calculadora de Recalque</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --success: #2ec4b6;
+            --warning: #ff9f1c;
+            --error: #e71d36;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
         body {
@@ -17,132 +29,298 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             padding: 2rem;
         }
 
         .calculator {
             background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.1),
+                0 10px 20px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+        }
+
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            gap: 1rem;
+        }
+
+        .header i {
+            font-size: 2.2rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         h1 {
-            color: #2c3e50;
-            margin-bottom: 2rem;
-            text-align: center;
+            color: var(--dark);
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            font-weight: 400;
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #34495e;
+            margin-bottom: 0.6rem;
+            color: var(--dark);
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         input {
             width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #bdc3c7;
-            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 0.8rem;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
 
         input:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: var(--accent);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 2.6rem;
+            color: #adb5bd;
         }
 
         button {
             width: 100%;
-            padding: 1rem;
-            background: #3498db;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 0.5rem;
+            border-radius: 0.8rem;
             font-size: 1.1rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
-            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0.1)
+            );
+            transform: rotate(30deg);
+            transition: all 0.3s ease;
+        }
+
+        button:hover::after {
+            left: 100%;
         }
 
         .result {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #ecf0f1;
-            border-radius: 0.5rem;
+            margin-top: 2.5rem;
+            padding: 1.8rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 0.8rem;
             text-align: center;
             display: none;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
         }
 
         .result.active {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
         }
 
         .result h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            font-size: 1.3rem;
         }
 
         .result-value {
-            font-size: 1.5rem;
-            color: #27ae60;
-            font-weight: bold;
+            font-size: 2rem;
+            color: var(--success);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .result-unit {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .water-mark {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: rgba(0,0,0,0.05);
+            font-size: 5rem;
+            z-index: 0;
+            pointer-events: none;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .calculator {
-                padding: 1.5rem;
+                padding: 1.8rem;
             }
             
             h1 {
                 font-size: 1.5rem;
             }
+            
+            .water-mark {
+                font-size: 3rem;
+                bottom: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+
+        /* Efeito de onda animado */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(67, 97, 238, 0.1)" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-repeat: no-repeat;
+            animation: wave 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <h1>Calculadora de Projetos de Recalque</h1>
+        <div class="wave"></div>
+        <div class="header">
+            <i class="fas fa-water"></i>
+            <div>
+                <h1>HydroCalc</h1>
+                <p class="subtitle">Cálculo de vazão para sistemas de recalque</p>
+            </div>
+        </div>
         
         <div class="input-group">
-            <label for="population">População Atendida (hab)</label>
-            <input type="number" id="population" placeholder="Digite a população">
+            <label for="population"><i class="fas fa-users" style="margin-right: 8px;"></i> População Atendida (hab)</label>
+            <input type="number" id="population" placeholder="Ex: 15000">
+            <i class="fas fa-user input-icon"></i>
         </div>
 
         <div class="input-group">
-            <label for="consumption">Consumo per capita (L/dia)</label>
-            <input type="number" id="consumption" placeholder="Digite o consumo diário">
+            <label for="consumption"><i class="fas fa-tint" style="margin-right: 8px;"></i> Consumo per capita (L/dia)</label>
+            <input type="number" id="consumption" placeholder="Ex: 200" value="200">
+            <i class="fas fa-glass-water input-icon"></i>
         </div>
 
         <div class="input-group">
-            <label for="time">Tempo de Operação (h/dia)</label>
-            <input type="number" id="time" placeholder="Digite o tempo de operação">
+            <label for="time"><i class="fas fa-clock" style="margin-right: 8px;"></i> Tempo de Operação (h/dia)</label>
+            <input type="number" id="time" placeholder="Ex: 16" value="16">
+            <i class="fas fa-hourglass input-icon"></i>
         </div>
 
-        <button onclick="calculate()">Calcular Vazão</button>
+        <button onclick="calculate()">
+            <i class="fas fa-calculator" style="margin-right: 10px;"></i> Calcular Vazão
+        </button>
 
         <div class="result" id="result">
             <h2>Vazão Necessária</h2>
-            <div class="result-value" id="result-value"></div>
-            <p>m³/s</p>
+            <div class="result-value" id="result-value">0,000000</div>
+            <p class="result-unit">metros cúbicos por segundo (m³/s)</p>
+        </div>
+
+        <div class="water-mark">
+            <i class="fas fa-droplet"></i>
         </div>
     </div>
 
@@ -155,7 +333,12 @@
 
             // Validar entradas
             if (!population || !consumption || !time) {
-                alert('Por favor, preencha todos os campos!');
+                showError('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            if (population <= 0 || consumption <= 0 || time <= 0) {
+                showError('Os valores devem ser maiores que zero!');
                 return;
             }
 
@@ -167,8 +350,21 @@
             const result = document.getElementById('result');
             const resultValue = document.getElementById('result-value');
             
-            resultValue.textContent = q.toFixed(6);
+            resultValue.textContent = q.toFixed(6).replace('.', ',');
             result.classList.add('active');
+        }
+
+        function showError(message) {
+            const result = document.getElementById('result');
+            const resultValue = document.getElementById('result-value');
+            
+            resultValue.textContent = message;
+            resultValue.style.color = 'var(--error)';
+            result.classList.add('active');
+            
+            setTimeout(() => {
+                resultValue.style.color = 'var(--success)';
+            }, 2000);
         }
     </script>
 </body>
