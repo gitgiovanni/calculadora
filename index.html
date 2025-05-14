@@ -463,34 +463,37 @@
         document.getElementById('suggestions').classList.add('active');
     }
 
-    function calculateSafetyMargins(flow, head, power) {
-        // Margens de segurança
-        const flowMargin = 1.10;
-        const headMargin = 1.15;
-        const powerMargin = 1.20;
+function calculateSafetyMargins(flow, head, power) {
+    const flowMargin = 1.10;
+    const headMargin = 1.15;
+    
+    // Valores recomendados
+    const suggestedFlow = flow * flowMargin;
+    const suggestedHead = head * headMargin;
 
-        // Valores recomendados
-        const suggestedFlow = flow * flowMargin;
-        const suggestedHead = head * headMargin;
+    // Lista completa de potências comerciais
+    const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200];
+    
+    // Encontrar a potência mais próxima
+    let suggestedPower = commercialPowers.find(p => p >= power * 1.2);
+    
+    // Caso não encontre, arredondar para próximo múltiplo de 10
+    if (!suggestedPower) {
+        suggestedPower = Math.ceil(power * 1.2 / 10) * 10 + " kW*";
+    }
 
-        // Potências comerciais
-        const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200];
-        let suggestedPower = commercialPowers.find(p => p >= (power * powerMargin)) || '>200';
+    // Atualizar interface
+    document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
+    document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
+    document.getElementById('suggested-power').textContent = suggestedPower;
 
-        // Validação de valores extremos
-        const MAX_REALISTIC_POWER = 10000;
+    suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
+
+                const MAX_REALISTIC_POWER = 10000;
         if(power > MAX_REALISTIC_POWER) {
             showError("Valores acima do padrão comercial! Verifique as entradas");
             suggestedPower = "N/A - Consulte especialista";
         }
-
-        // Atualizar interface
-        document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
-        document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
-        document.getElementById('suggested-power').textContent = suggestedPower;
-        
-        // Sugerir modelos
-        suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
     }
 
     function suggestPumpModels(flow, head, power) {
