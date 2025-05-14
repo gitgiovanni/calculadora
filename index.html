@@ -456,9 +456,9 @@
             const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
 
             // Exibir resultados
-            document.getElementById('flow-result').textContent = Q_m3h.toFixed(2);
-            document.getElementById('total-head').textContent = H_total.toFixed(2);
-            document.getElementById('pump-power').textContent = P.toFixed(2);
+    document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
+    document.getElementById('total-head').textContent = formatNumber(H_total);
+    document.getElementById('pump-power').textContent = formatNumber(P);
             document.getElementById('result').classList.add('active');
 
             // Calcular sugestões com margem de segurança
@@ -468,6 +468,13 @@
         function showError(message) {
             alert(message); // Ou use um sistema mais elegante como antes
         }
+
+        function formatNumber(num) {
+    return new Intl.NumberFormat('pt-BR', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0
+    }).format(num);
+}
 
           function calculateSafetyMargins(flow, head, power) {
             // Margens de segurança (personalizáveis)
@@ -487,28 +494,40 @@
             document.getElementById('suggested-flow').textContent = suggestedFlow;
             document.getElementById('suggested-head').textContent = suggestedHead;
             document.getElementById('suggested-power').textContent = suggestedPower;
-            
-            // Sugerir modelos de bombas (exemplo simplificado)
-            suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
+
+              const MAX_REALISTIC_POWER = 5000; // 5MW
+    
+    if(power > MAX_REALISTIC_POWER) {
+        showError("Valores irreais detectados! Verifique as entradas");
+        return;
+    }
+
             
             document.getElementById('suggestions').classList.add('active');
         }
 
-        function suggestPumpModels(flow, head, power) {
-            // Exemplo: Lógica para sugerir modelos baseados em faixas
-            const models = [];
-            
-            if (flow >= 30 && flow <= 40 && head >= 35 && head <= 45) {
-                models.push("Schneider BCR-35/40 (7.5kW)");
-                models.push("KSB Megabloc 50-200 (7.5kW)");
-            } else if (flow > 40 && flow <= 60) {
-                models.push("Schneider BCR-50/60 (11kW)");
-            }
-            
-            // Atualizar lista HTML
-            const list = document.getElementById('pump-models');
-            list.innerHTML = models.map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`).join('');
-        }
+       function suggestPumpModels(flow, head, power) {
+    const models = [];
+    
+    // Faixas ampliadas para modelos de bombas
+    if (flow <= 50 && head <= 100) {
+        models.push("Schneider BCR-35/40 (7.5kW)");
+        models.push("KSB Megabloc 50-200 (7.5kW)");
+    } else if (flow <= 200 && head <= 300) {
+        models.push("Bomba centrífuga XHD-200 (30kW)");
+        models.push("Sulzer ABS 250 (45kW)");
+    } else if (flow > 200) {
+        models.push("Sistema de múltiplas bombas em série/paralelo");
+    }
+    
+    // Adicionar mensagem se não encontrar modelos
+    if(models.length === 0) {
+        models.push("Nenhum modelo comercial encontrado - consulte um especialista");
+    }
+
+    const list = document.getElementById('pump-models');
+    list.innerHTML = models.map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`).join('');
+}
     </script>
 </body>
 </html>
