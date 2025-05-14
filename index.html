@@ -418,13 +418,13 @@
     </div>
 
 <script>
+  <script>
     function calculateFullSystem() {
         // ETAPA 1: Cálculo da Vazão
         const population = parseFloat(document.getElementById('population').value);
         const consumption = parseFloat(document.getElementById('consumption').value);
         const time = parseFloat(document.getElementById('time').value);
 
-        // Validação básica
         if (!population || !consumption || !time) {
             showError('Preencha todos os campos!');
             return;
@@ -432,23 +432,23 @@
 
         // Cálculos hidráulicos
         const dailyDemand = population * consumption; 
-        const Q_lps = dailyDemand / (time * 3600); 
-        const Q_m3h = Q_lps * 3600; 
+        const Q_lps = dailyDemand / (time * 3600); // m³/s
+        const Q_m3h = Q_lps * 3600; // m³/h
 
         // ETAPA 2: Cálculo do Recalque
-        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000;
+        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // m
         const H_stat = parseFloat(document.getElementById('static-height').value);
         const L = parseFloat(document.getElementById('pipe-length').value);
         const C = 150; 
 
-        // Cálculo de perdas
-        const A = Math.PI * Math.pow(D/2, 2);
-        const J = 10.643 * Math.pow(Q_lps, 1.85) / (Math.pow(C, 1.85) * Math.pow(D, 4.87));
+        // Cálculo CORRIGIDO de perdas (Hazen-Williams)
+        const Q_m3s = Q_lps; // Já está em m³/s
+        const J = 10.643 * Math.pow(Q_m3s / C, 1.85) / Math.pow(D, 4.87);
         const H_perda = J * L;
         const H_total = H_stat + H_perda;
 
         // Potência da bomba
-        const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
+        const P = (Q_m3s * 1000 * 9.81 * H_total) / (0.7 * 1000); // kW
 
         // Exibir resultados
         document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
@@ -456,7 +456,7 @@
         document.getElementById('pump-power').textContent = formatNumber(P);
         document.getElementById('result').classList.add('active');
 
-        // Calcular e exibir sugestões
+        // Sugestões
         calculateSafetyMargins(Q_m3h, H_total, P);
         document.getElementById('suggestions').classList.add('active');
     }
