@@ -419,115 +419,121 @@
 
     </div>
 
-    <script>
-        function calculateFullSystem() {
-            // ETAPA 1: Cálculo da Vazão (igual ao seu código original)
-            const population = parseFloat(document.getElementById('population').value);
-            const consumption = parseFloat(document.getElementById('consumption').value);
-            const time = parseFloat(document.getElementById('time').value);
+<script>
+    function calculateFullSystem() {
+        // ETAPA 1: Cálculo da Vazão
+        const population = parseFloat(document.getElementById('population').value);
+        const consumption = parseFloat(document.getElementById('consumption').value);
+        const time = parseFloat(document.getElementById('time').value);
 
-            if (!population || !consumption || !time) {
-                showError('Preencha todos os campos!');
-                return;
-            }
-
-            const dailyDemand = population * consumption; // Litros/dia
-            const Q_lps = dailyDemand / (time * 3600); // m³/s
-            const Q_m3h = Q_lps * 3600; // Converter para m³/h
-
-            // ETAPA 2: Cálculo do Recalque
-            const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // m
-            const H_stat = parseFloat(document.getElementById('static-height').value);
-            const L = parseFloat(document.getElementById('pipe-length').value);
-            const C = 150; // Coeficiente de Hazen-Williams (PVC)
-
-            // Fórmulas hidráulicas
-            const A = Math.PI * Math.pow(D/2, 2); // Área da tubulação
-            const V = Q_lps / A; // Velocidade (m/s)
-
-            // Perda de carga (Hazen-Williams simplificada)
-            const J = 10.643 * Math.pow(Q_lps, 1.85) / (Math.pow(C, 1.85) * Math.pow(D, 4.87));
-            const H_perda = J * L;
-
-            // Altura manométrica total
-            const H_total = H_stat + H_perda;
-
-            // Potência da bomba (kW)
-            const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
-
-            // Exibir resultados
-    document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
-    document.getElementById('total-head').textContent = formatNumber(H_total);
-    document.getElementById('pump-power').textContent = formatNumber(P);
-            document.getElementById('result').classList.add('active');
-
-            // Calcular sugestões com margem de segurança
-            calculateSafetyMargins(Q_m3h, H_total, P);
+        // Validação básica
+        if (!population || !consumption || !time) {
+            showError('Preencha todos os campos!');
+            return;
         }
 
-        function showError(message) {
-            alert(message); // Ou use um sistema mais elegante como antes
+        // Cálculos hidráulicos
+        const dailyDemand = population * consumption; 
+        const Q_lps = dailyDemand / (time * 3600); 
+        const Q_m3h = Q_lps * 3600; 
+
+        // ETAPA 2: Cálculo do Recalque
+        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000;
+        const H_stat = parseFloat(document.getElementById('static-height').value);
+        const L = parseFloat(document.getElementById('pipe-length').value);
+        const C = 150; 
+
+        // Cálculo de perdas
+        const A = Math.PI * Math.pow(D/2, 2);
+        const J = 10.643 * Math.pow(Q_lps, 1.85) / (Math.pow(C, 1.85) * Math.pow(D, 4.87));
+        const H_perda = J * L;
+        const H_total = H_stat + H_perda;
+
+        // Potência da bomba
+        const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
+
+        // Exibir resultados
+        document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
+        document.getElementById('total-head').textContent = formatNumber(H_total);
+        document.getElementById('pump-power').textContent = formatNumber(P);
+        document.getElementById('result').classList.add('active');
+
+        // Calcular e exibir sugestões
+        calculateSafetyMargins(Q_m3h, H_total, P);
+        document.getElementById('suggestions').classList.add('active');
+    }
+
+    function calculateSafetyMargins(flow, head, power) {
+        // Margens de segurança
+        const flowMargin = 1.10;
+        const headMargin = 1.15;
+        const powerMargin = 1.20;
+
+        // Valores recomendados
+        const suggestedFlow = flow * flowMargin;
+        const suggestedHead = head * headMargin;
+
+        // Potências comerciais
+        const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200];
+        let suggestedPower = commercialPowers.find(p => p >= (power * powerMargin)) || '>200';
+
+        // Validação de valores extremos
+        const MAX_REALISTIC_POWER = 10000;
+        if(power > MAX_REALISTIC_POWER) {
+            showError("Valores acima do padrão comercial! Verifique as entradas");
+            suggestedPower = "N/A - Consulte especialista";
         }
 
-        function formatNumber(num) {
-    return new Intl.NumberFormat('pt-BR', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 0
-    }).format(num);
-}
-
-          function calculateSafetyMargins(flow, head, power) {
-            // Margens de segurança (personalizáveis)
-            const flowMargin = 1.10;  // +10%
-            const headMargin = 1.15;  // +15%
-            const powerMargin = 1.20; // +20%
-            
-            // Valores recomendados
-            const suggestedFlow = (flow * flowMargin).toFixed(2);
-            const suggestedHead = (head * headMargin).toFixed(2);
-            
-            // Potência comercial mais próxima (valores padrão do mercado)
-            const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22];
-            const suggestedPower = commercialPowers.find(p => p >= (power * powerMargin)) || 22;
-            
-            // Exibir sugestões
-            document.getElementById('suggested-flow').textContent = suggestedFlow;
-            document.getElementById('suggested-head').textContent = suggestedHead;
-            document.getElementById('suggested-power').textContent = suggestedPower;
-
-              const MAX_REALISTIC_POWER = 5000; // 5MW
-    
-    if(power > MAX_REALISTIC_POWER) {
-        showError("Valores irreais detectados! Verifique as entradas");
-        return;
+        // Atualizar interface
+        document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
+        document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
+        document.getElementById('suggested-power').textContent = suggestedPower;
+        
+        // Sugerir modelos
+        suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
     }
 
-            
-            document.getElementById('suggestions').classList.add('active');
+    function suggestPumpModels(flow, head, power) {
+        const models = [];
+        
+        // Faixas de bombas
+        if (flow <= 50 && head <= 100) {
+            models.push("Schneider BCR-35/40 (7.5kW)");
+            models.push("KSB Megabloc 50-200 (7.5kW)");
+        } else if (flow <= 200 && head <= 200) {
+            models.push("Bomba centrífuga XHD-200 (30kW)");
+            models.push("Sulzer ABS 250 (45kW)");
+        } else if (flow <= 500 && head <= 300) {
+            models.push("Bomba multicelular MQ 300-500 (90kW)");
+            models.push("Grundfos CR 450 (110kW)");
+        } else {
+            models.push("Sistema de múltiplas bombas em série/paralelo");
+            models.push("Consulte fabricantes especializados");
         }
 
-       function suggestPumpModels(flow, head, power) {
-    const models = [];
-    
-    // Faixas ampliadas para modelos de bombas
-    if (flow <= 50 && head <= 100) {
-        models.push("Schneider BCR-35/40 (7.5kW)");
-        models.push("KSB Megabloc 50-200 (7.5kW)");
-    } else if (flow <= 200 && head <= 300) {
-        models.push("Bomba centrífuga XHD-200 (30kW)");
-        models.push("Sulzer ABS 250 (45kW)");
-    } else if (flow > 200) {
-        models.push("Sistema de múltiplas bombas em série/paralelo");
-    }
-    
-    // Adicionar mensagem se não encontrar modelos
-    if(models.length === 0) {
-        models.push("Nenhum modelo comercial encontrado - consulte um especialista");
+        // Atualizar lista
+        const list = document.getElementById('pump-models');
+        list.innerHTML = models.map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`).join('');
     }
 
-    const list = document.getElementById('pump-models');
-    list.innerHTML = models.map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`).join('');
-}
-    </script>
+    function formatNumber(num) {
+        return new Intl.NumberFormat('pt-BR', {
+            maximumFractionDigits: num >= 1000 ? 0 : 2
+        }).format(num);
+    }
+
+    function showError(message) {
+        const result = document.getElementById('result');
+        const resultValue = document.getElementById('pump-power');
+        
+        resultValue.textContent = message;
+        resultValue.style.color = 'var(--error)';
+        result.classList.add('active');
+        
+        setTimeout(() => {
+            resultValue.style.color = 'var(--success)';
+        }, 3000);
+    }
+</script>
 </body>
 </html>
