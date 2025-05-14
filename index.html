@@ -278,93 +278,134 @@
             0% { background-position-x: 0; }
             100% { background-position-x: 1440px; }
         }
+
+                /* Adicione esta classe para os itens de resultado */
+        .result-item {
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
     <div class="calculator">
         <div class="wave"></div>
         <div class="header">
-            <i class="fas fa-water"></i>
+            <i class="fas fa-tint"></i>
             <div>
-                <h1>HydroCalc</h1>
-                <p class="subtitle">Cálculo de vazão para sistemas de recalque</p>
+                <h1>HydroCalc Recalque</h1>
+                <p class="subtitle">Cálculo completo de vazão e dimensionamento hidráulico</p>
             </div>
         </div>
-        
+
+        <!-- ETAPA 1: Cálculo de Vazão (como na sua versão) -->
+        <h3 style="margin-bottom: 1rem; color: var(--primary);">1. Cálculo da Vazão</h3>
         <div class="input-group">
-            <label for="population"><i class="fas fa-users" style="margin-right: 8px;"></i> População Atendida (hab)</label>
+            <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
             <input type="number" id="population" placeholder="Ex: 15000">
-            <i class="fas fa-user input-icon"></i>
         </div>
 
         <div class="input-group">
-            <label for="consumption"><i class="fas fa-tint" style="margin-right: 8px;"></i> Consumo per capita (L/dia)</label>
-            <input type="number" id="consumption" placeholder="Ex: 200">
-            <i class="fas fa-glass-water input-icon"></i>
+            <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
+            <input type="number" id="consumption" placeholder="Ex: 200" value="200">
         </div>
 
         <div class="input-group">
-            <label for="time"><i class="fas fa-clock" style="margin-right: 8px;"></i> Tempo de Operação (h/dia)</label>
-            <input type="number" id="time" placeholder="Ex: 16">
-            <i class="fas fa-hourglass input-icon"></i>
+            <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
+            <input type="number" id="time" placeholder="Ex: 16" value="16">
         </div>
 
-        <button onclick="calculate()">
-            <i class="fas fa-calculator" style="margin-right: 10px;"></i> Calcular Vazão
+        <!-- ETAPA 2: Parâmetros de Recalque -->
+        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
+        <div class="input-group">
+            <label for="pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
+            <input type="number" id="pipe-diameter" placeholder="Ex: 150">
+        </div>
+
+        <div class="input-group">
+            <label for="static-height"><i class="fas fa-mountain"></i> Altura Estática (m)</label>
+            <input type="number" id="static-height" placeholder="Ex: 30">
+        </div>
+
+        <div class="input-group">
+            <label for="pipe-length"><i class="fas fa-ruler"></i> Comprimento da Tubulação (m)</label>
+            <input type="number" id="pipe-length" placeholder="Ex: 500">
+        </div>
+
+        <button onclick="calculateFullSystem()">
+            <i class="fas fa-calculator"></i> Calcular Sistema Completo
         </button>
 
+        <!-- Resultados -->
         <div class="result" id="result">
-            <h2>Vazão Necessária</h2>
-            <div class="result-value" id="result-value">0,000000</div>
-            <p class="result-unit">metros cúbicos por segundo (m³/s)</p>
-        </div>
+            <h2>Resultados</h2>
+            
+            <div class="result-item">
+                <span>Vazão Necessária:</span>
+                <span class="result-value" id="flow-result">0,00</span> m³/h
+            </div>
 
-        <div class="water-mark">
-            <i class="fas fa-droplet"></i>
+            <div class="result-item">
+                <span>Altura Manométrica Total:</span>
+                <span class="result-value" id="total-head">0,00</span> m
+            </div>
+
+            <div class="result-item">
+                <span>Potência da Bomba:</span>
+                <span class="result-value" id="pump-power">0,00</span> kW
+            </div>
+
+            <p class="result-unit">* Eficiência considerada: 70% | Material: PVC (C=150)</p>
         </div>
     </div>
 
     <script>
-        function calculate() {
-            // Obter valores dos inputs
+        function calculateFullSystem() {
+            // ETAPA 1: Cálculo da Vazão (igual ao seu código original)
             const population = parseFloat(document.getElementById('population').value);
             const consumption = parseFloat(document.getElementById('consumption').value);
             const time = parseFloat(document.getElementById('time').value);
 
-            // Validar entradas
             if (!population || !consumption || !time) {
-                showError('Por favor, preencha todos os campos!');
+                showError('Preencha todos os campos!');
                 return;
             }
 
-            if (population <= 0 || consumption <= 0 || time <= 0) {
-                showError('Os valores devem ser maiores que zero!');
-                return;
-            }
-
-            // Calcular vazão
             const dailyDemand = population * consumption; // Litros/dia
-            const q = dailyDemand / (time * 3600); // Conversão para m³/s
+            const Q_lps = dailyDemand / (time * 3600); // m³/s
+            const Q_m3h = Q_lps * 3600; // Converter para m³/h
 
-            // Exibir resultado
-            const result = document.getElementById('result');
-            const resultValue = document.getElementById('result-value');
-            
-            resultValue.textContent = q.toFixed(6).replace('.', ',');
-            result.classList.add('active');
+            // ETAPA 2: Cálculo do Recalque
+            const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // m
+            const H_stat = parseFloat(document.getElementById('static-height').value);
+            const L = parseFloat(document.getElementById('pipe-length').value);
+            const C = 150; // Coeficiente de Hazen-Williams (PVC)
+
+            // Fórmulas hidráulicas
+            const A = Math.PI * Math.pow(D/2, 2); // Área da tubulação
+            const V = Q_lps / A; // Velocidade (m/s)
+
+            // Perda de carga (Hazen-Williams simplificada)
+            const J = 10.643 * Math.pow(Q_lps, 1.85) / (Math.pow(C, 1.85) * Math.pow(D, 4.87));
+            const H_perda = J * L;
+
+            // Altura manométrica total
+            const H_total = H_stat + H_perda;
+
+            // Potência da bomba (kW)
+            const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
+
+            // Exibir resultados
+            document.getElementById('flow-result').textContent = Q_m3h.toFixed(2);
+            document.getElementById('total-head').textContent = H_total.toFixed(2);
+            document.getElementById('pump-power').textContent = P.toFixed(2);
+            document.getElementById('result').classList.add('active');
         }
 
         function showError(message) {
-            const result = document.getElementById('result');
-            const resultValue = document.getElementById('result-value');
-            
-            resultValue.textContent = message;
-            resultValue.style.color = 'var(--error)';
-            result.classList.add('active');
-            
-            setTimeout(() => {
-                resultValue.style.color = 'var(--success)';
-            }, 2000);
+            alert(message); // Ou use um sistema mais elegante como antes
         }
     </script>
 </body>
