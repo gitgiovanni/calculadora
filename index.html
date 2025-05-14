@@ -445,99 +445,121 @@
         const L = parseFloat(document.getElementById('pipe-length').value);
         const C = 150; 
 
-        // Cálculo CORRIGIDO de perdas (Hazen-Williams)
-        const Q_m3s = Q_lps;
-        const J = 10.643 * Math.pow(Q_m3s / C, 1.85) / Math.pow(D, 4.87);
-        const H_perda = J * (L / 100); // CORREÇÃO CRÍTICA: Dividir por 100
+        // Hazen-Williams corrigido
+        const J = 10.643 * Math.pow(Q_lps / C, 1.85) / Math.pow(D, 4.87);
+        const H_perda = J * (L / 100);
         const H_total = H_stat + H_perda;
 
-        // Potência da bomba
-        const P = (Q_m3s * 1000 * 9.81 * H_total) / (0.7 * 1000); // kW
+        // Potência da bomba (kW)
+        const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
 
-        // Exibir resultados
+        // Exibir resultados básicos
         document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
         document.getElementById('total-head').textContent = formatNumber(H_total);
         document.getElementById('pump-power').textContent = formatNumber(P);
         document.getElementById('result').classList.add('active');
 
-        // Sugestões
+        // Sugestões de projeto
         calculateSafetyMargins(Q_m3h, H_total, P);
         document.getElementById('suggestions').classList.add('active');
     }
 
     function calculateSafetyMargins(flow, head, power) {
-    const flowMargin = 1.10;
-    const headMargin = 1.15;
-    
-    const suggestedFlow = flow * flowMargin;
-    const suggestedHead = head * headMargin;
+        const flowMargin = 1.10;
+        const headMargin = 1.15;
 
-        // Lista de potências comerciais atualizada
-         const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200, 250, 315, 400, 500];
-         let suggestedPower = commercialPowers.find(p => p >= power * 1.2) || commercialPowers[commercialPowers.length - 1];
+        const suggestedFlow = flow * flowMargin;
+        const suggestedHead = head * headMargin;
 
-        
-        if (!suggestedPower) {
-            suggestedPower = "Consulte fabricantes (potência >500kW)";
+        // Potências comerciais disponíveis (kW)
+        const commercialPowers = [
+            1.5, 2.2, 3.7, 5.5, 7.5, 11,
+            15, 18.5, 22, 30, 37, 45,
+            55, 75, 90, 110, 132, 160,
+            200, 250, 315, 400, 500
+        ];
+
+        // Encontra a primeira potência ≥ 120% da calculada
+        const needed = power * 1.2;
+        const found = commercialPowers.find(p => p >= needed);
+        const suggestedPowerStr = found
+            ? `${found}` 
+            : 'Consulte fabricantes (potência >500 kW)';
+
+        // Atualiza valores de sugestão
+        document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
+        document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
+        document.getElementById('suggested-power').textContent = suggestedPowerStr;
+
+        // Exibe aviso só se ultrapassar o limite realístico
+        const MAX_REALISTIC_POWER = 10000; // kW
+        const warningContainer = document.getElementById('suggestions');
+        // Remove aviso pré-existente
+        const old = warningContainer.querySelector('.suggestion-item.warning');
+        if (old) old.remove();
+
+        if (needed > MAX_REALISTIC_POWER) {
+            warningContainer.insertAdjacentHTML('beforeend', `
+                <div class="suggestion-item warning">
+                    <strong>Atenção:</strong> Potência calculada (${formatNumber(power)} kW) está acima do padrão comercial.
+                </div>
+            `);
         }
 
-        const MAX_REALISTIC_POWER = 10000;
-    const warningContainer = document.getElementById('suggestions');
-    // Remove aviso antigo caso exista
-    const oldWarning = warningContainer.querySelector('.warning');
-    if (oldWarning) oldWarning.remove();
-    
-    if (power * 1.2 > MAX_REALISTIC_POWER) {
-        warningContainer.insertAdjacentHTML('beforeend', `
-            <div class="suggestion-item warning" style="border-left-color: var(--error);">
-                <strong>Atenção:</strong> Potência calculada (${formatNumber(power)} kW) está acima do padrão comercial.
-            </div>
-        `);
-    }
-suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
-
-    document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
-    document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
-    document.getElementById('suggested-power').textContent = suggestedPower;
-
- 
+        // Modelos de bomba
+        suggestPumpModels(suggestedFlow, suggestedHead, found || MAX_REALISTIC_POWER + 1);
     }
 
-    function suggestPumpModels(flow, head, power) {
-        const models = [];
-        
-        if (flow <= 50 && head <= 100) {
-            models.push("Schneider BCR-35/40 (7.5kW)", "KSB Megabloc 50-200 (7.5kW)");
-        } else if (flow <= 200 && head <= 200) {
-            models.push("Bomba centrífuga XHD-200 (30kW)", "Sulzer ABS 250 (45kW)");
-        } else if (flow <= 500 && head <= 300) {
-            models.push("Bomba multicelular MQ 300-500 (90kW)", "Grundfos CR 450 (110kW)");
-        } else {
-            models.push("Sistema de múltiplas bombas em série/paralelo", "Consulte fabricantes especializados");
-        }
-
+    function suggestPumpModels(flow, head, powerForModel) {
         const list = document.getElementById('pump-models');
-        list.innerHTML = models.map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`).join('');
+        let models = [];
+
+        if (flow <= 50 && head <= 100) {
+            models = [
+                'Schneider BCR-35/40 (7.5 kW)',
+                'KSB Megabloc 50-200 (7.5 kW)'
+            ];
+        } else if (flow <= 200 && head <= 200) {
+            models = [
+                'Bomba centrífuga XHD-200 (30 kW)',
+                'Sulzer ABS 250 (45 kW)'
+            ];
+        } else if (flow <= 500 && head <= 300) {
+            models = [
+                'Bomba multicelular MQ 300-500 (90 kW)',
+                'Grundfos CR 450 (110 kW)'
+            ];
+        } else {
+            models = [
+                'Sistema de múltiplas bombas em série/paralelo',
+                'Consulte fabricantes especializados'
+            ];
+        }
+
+        list.innerHTML = models
+            .map(m => `<li><i class="fas fa-check-circle"></i> ${m}</li>`)
+            .join('');
     }
 
     function formatNumber(num) {
-        return new Intl.NumberFormat('pt-BR', { 
-            maximumFractionDigits: num >= 1000 ? 0 : 2 
+        return new Intl.NumberFormat('pt-BR', {
+            maximumFractionDigits: num >= 1000 ? 0 : 2
         }).format(num);
     }
 
     function showError(message) {
         const result = document.getElementById('result');
-        const resultValue = document.getElementById('pump-power');
-        
-        resultValue.textContent = message;
-        resultValue.style.color = 'var(--error)';
+        const pumpPower = document.getElementById('pump-power');
+
+        pumpPower.textContent = message;
+        pumpPower.style.color = 'var(--error)';
         result.classList.add('active');
-        
+
         setTimeout(() => {
-            resultValue.style.color = 'var(--success)';
+            pumpPower.style.color = 'var(--success)';
         }, 3000);
     }
 </script>
+
 </body>
 </html>
