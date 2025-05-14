@@ -461,33 +461,41 @@
     }
 
     function calculateSafetyMargins(flow, head, power) {
-        const flowMargin = 1.10;
-        const headMargin = 1.15;
-        
-        const suggestedFlow = flow * flowMargin;
-        const suggestedHead = head * headMargin;
+    const flowMargin = 1.10;
+    const headMargin = 1.15;
+    
+    const suggestedFlow = flow * flowMargin;
+    const suggestedHead = head * headMargin;
 
         // Lista de potências comerciais atualizada
-        const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200, 250, 315, 400, 500];
-        
-        let suggestedPower = commercialPowers.find(p => p >= power * 1.2);
+         const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200, 250, 315, 400, 500];
+         let suggestedPower = commercialPowers.find(p => p >= power * 1.2) || commercialPowers[commercialPowers.length - 1];
+
         
         if (!suggestedPower) {
             suggestedPower = "Consulte fabricantes (potência >500kW)";
         }
 
-        // Validação corrigida
         const MAX_REALISTIC_POWER = 10000;
-        if (power * 1.2 > MAX_REALISTIC_POWER) { // Verifica a potência COM margem
-            showError("Valores acima do padrão comercial!");
-            suggestedPower = "N/A - Consulte especialista";
-        }
+    const warningContainer = document.getElementById('suggestions');
+    // Remove aviso antigo caso exista
+    const oldWarning = warningContainer.querySelector('.warning');
+    if (oldWarning) oldWarning.remove();
+    
+    if (power * 1.2 > MAX_REALISTIC_POWER) {
+        warningContainer.insertAdjacentHTML('beforeend', `
+            <div class="suggestion-item warning" style="border-left-color: var(--error);">
+                <strong>Atenção:</strong> Potência calculada (${formatNumber(power)} kW) está acima do padrão comercial.
+            </div>
+        `);
+    }
+suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
 
-        document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
-        document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
-        document.getElementById('suggested-power').textContent = suggestedPower;
+    document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
+    document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
+    document.getElementById('suggested-power').textContent = suggestedPower;
 
-        suggestPumpModels(suggestedFlow, suggestedHead, suggestedPower);
+ 
     }
 
     function suggestPumpModels(flow, head, power) {
