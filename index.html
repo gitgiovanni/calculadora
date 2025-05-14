@@ -461,9 +461,9 @@
         document.getElementById('pump-power').textContent = formatNumber(P);
         document.getElementById('result').classList.add('active');
 
-        // Sugestões de projeto
-        calculateSafetyMargins(Q_m3h, H_total, P);
+        // Sugestões de projeto (garantir que a seção é mostrada)
         document.getElementById('suggestions').classList.add('active');
+        calculateSafetyMargins(Q_m3h, H_total, P);
     }
 
     function calculateSafetyMargins(flow, head, power) {
@@ -510,6 +510,9 @@
 
         // Modelos de bomba
         suggestPumpModels(suggestedFlow, suggestedHead, found || MAX_REALISTIC_POWER + 1);
+        
+        // Garante que a seção permaneça visível
+        document.getElementById('suggestions').classList.add('active');
     }
 
     function suggestPumpModels(flow, head, powerForModel) {
