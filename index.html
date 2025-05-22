@@ -320,6 +320,33 @@
     background: #ffe5e5;
     border-left-color: var(--error);
 }
+
+          .components-section {
+            border: 2px solid var(--primary);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .component-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .component-select {
+            flex: 2;
+        }
+        
+        .component-qtd {
+            flex: 1;
+        }
+        
+        .unit-hint {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.3rem;
+        }
     </style>
 </head>
 <body>
@@ -349,21 +376,54 @@
             <input type="number" id="time" placeholder="Ex: 16">
         </div>
 
+          <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
+
+        <div class="components-section">
+            <h4><i class="fas fa-tools"></i> Componentes Hidráulicos</h4>
+            
+            <div class="component-group">
+                <select class="component-select" id="component-type">
+                    <option value="0.9">Cotovelo 90° (K=0.9)</option>
+                    <option value="0.4">Cotovelo 45° (K=0.4)</option>
+                    <option value="10">Válvula de retenção (K=10)</option>
+                    <option value="0.2">Válvula de gaveta (K=0.2)</option>
+                    <option value="1.5">Tê passagem lateral (K=1.5)</option>
+                </select>
+                <input type="number" class="component-qtd" id="component-qtd" min="0" value="0" placeholder="Qtd">
+                <button type="button" onclick="addComponent()" style="padding: 0.5rem;">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div id="components-list"></div>
+            <div class="unit-hint">ΣK Total: <span id="total-k">0</span></div>
+        </div>
+
         <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
+
+        
         <div class="input-group">
             <label for="pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
             <input type="number" id="pipe-diameter" placeholder="Ex: 150">
         </div>
 
-        <div class="input-group">
-            <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
-            <input type="number" id="roughness" step="0.001" value="0.0015" placeholder="Ex: 0.0015 (PVC)">
-        </div>
+<div class="input-group">
+    <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
+    <input type="number" id="roughness" step="0.001" 
+           value="0.0015" 
+           placeholder="Ex: 0.015"
+           pattern="[0-9]+([,\.][0-9]+)?">
+    <div class="unit-hint">PVC = 0.0015mm | Aço = 0.15mm</div>
+</div>
+<div class="input-group">
+    <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
+    <input type="number" id="viscosity" step="1e-7" 
+           value="0.000001" 
+           placeholder="Ex: 1e-6"
+           pattern="[0-9]e-[0-9]">
+    <div class="unit-hint">Água a 20°C = 1e-6 m²/s</div>
+</div>
 
-        <div class="input-group">
-            <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
-            <input type="number" id="viscosity" step="1e-7" value="0.000001" placeholder="Ex: 1e-6 (Água 20°C)">
-        </div>
 
         <div class="input-group">
             <label for="local-losses"><i class="fas fa-water"></i> Perdas Localizadas (ΣK)</label>
@@ -423,6 +483,42 @@
     </div>
 
 <script>
+
+     let totalK = 0;
+    const components = [];
+
+    function addComponent() {
+        const type = document.getElementById('component-type');
+        const qtd = parseInt(document.getElementById('component-qtd').value);
+        const kValue = parseFloat(type.value);
+        const componentName = type.options[type.selectedIndex].text;
+        
+        if(qtd > 0) {
+            components.push({name: componentName, qtd: qtd, k: kValue});
+            totalK += kValue * qtd;
+            updateComponentsList();
+        }
+    }
+
+    function updateComponentsList() {
+        const list = document.getElementById('components-list');
+        const totalSpan = document.getElementById('total-k');
+        list.innerHTML = components.map(c => `
+            <div class="suggestion-item">
+                ${c.qtd}x ${c.name} (K=${c.k.toFixed(1)})
+                <button onclick="removeComponent(${components.indexOf(c)})" style="float: right; padding: 0.2rem 0.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `).join('');
+        totalSpan.textContent = totalK.toFixed(1);
+    }
+
+    function removeComponent(index) {
+        totalK -= components[index].k * components[index].qtd;
+        components.splice(index, 1);
+        updateComponentsList();
+    }
     function calculateFullSystem() {
         // ETAPA 1: Cálculo da Vazão
         const population = parseFloat(document.getElementById('population').value);
