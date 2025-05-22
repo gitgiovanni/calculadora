@@ -358,6 +358,16 @@
         </div>
 
         <div class="input-group">
+    <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
+    <input type="number" id="roughness" step="0.001" placeholder="Ex: 0.0015 (PVC)">
+</div>
+
+<div class="input-group">
+    <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
+    <input type="number" id="viscosity" step="1e-7" placeholder="Ex: 1e-6 (Água 20°C)">
+</div>
+
+        <div class="input-group">
             <label for="static-height"><i class="fas fa-mountain"></i> Altura Estática (m)</label>
             <input type="number" id="static-height" placeholder="Ex: 30">
         </div>
@@ -452,6 +462,35 @@
         const H_perda = J * (L / 100);
         const H_total = H_stat + H_perda;
 
+          const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // m
+    const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
+    const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6; // default 1e-6
+    const L = parseFloat(document.getElementById('pipe-length').value);
+    const H_stat = parseFloat(document.getElementById('static-height').value);
+    const g = 9.81; // aceleração gravitacional
+
+    // Cálculo da velocidade (V = Q/A)
+    const A = Math.PI * Math.pow(D/2, 2);
+    const V = Q_lps / A;
+
+    // Cálculo do Número de Reynolds (Re)
+    const Re = (V * D) / ν;
+
+    // Cálculo do fator de atrito (f) - Equação explícita
+    const term1 = Math.pow(ε/D / 3.7, 1.11);
+    const term2 = 6.9 / Re;
+    const f = Math.pow(-1.8 * Math.log10(term1 + term2), -2);
+
+    // Cálculo da perda de carga (Darcy-Weisbach)
+   const hf = f * (L/D) * (Math.pow(V, 2)/(2*g));
+
+         const K = parseFloat(document.getElementById('local-losses').value) || 0;
+         const h_local = K * (Math.pow(V, 2)/(2*g));
+    const hf_total = hf + h_local;
+
+    // Altura total (H_total = H_estática + perdas)
+    const H_total = H_stat + hf_total;
+
         // Potência da bomba (kW)
         const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
 
@@ -465,6 +504,7 @@
         document.getElementById('suggestions').classList.add('active');
         calculateSafetyMargins(Q_m3h, H_total, P);
     }
+    
 
     function calculateSafetyMargins(flow, head, power) {
         const flowMargin = 1.10;
@@ -489,9 +529,12 @@
             : 'Consulte fabricantes (potência >500 kW)';
 
         // Atualiza valores de sugestão
+        
         document.getElementById('suggested-flow').textContent = formatNumber(suggestedFlow);
         document.getElementById('suggested-head').textContent = formatNumber(suggestedHead);
         document.getElementById('suggested-power').textContent = suggestedPowerStr;
+         document.getElementById('suggested-head').innerHTML = 
+        `${formatNumber(H_total)} m (f = ${f.toFixed(4)})`;
 
         // Exibe aviso só se ultrapassar o limite realístico
         const MAX_REALISTIC_POWER = 10000; // kW
