@@ -347,6 +347,15 @@
             color: #6c757d;
             margin-top: 0.3rem;
         }
+        .btn-remove {
+    float: right;
+    padding: 0.2rem 0.5rem;
+    background: var(--error);
+    border: none;
+    border-radius: 0.3rem;
+    color: white;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -488,37 +497,40 @@
     const components = [];
 
     function addComponent() {
-        const type = document.getElementById('component-type');
-        const qtd = parseInt(document.getElementById('component-qtd').value);
-        const kValue = parseFloat(type.value);
-        const componentName = type.options[type.selectedIndex].text;
-        
-        if(qtd > 0) {
-            components.push({name: componentName, qtd: qtd, k: kValue});
-            totalK += kValue * qtd;
-            updateComponentsList();
-        }
-    }
-
-    function updateComponentsList() {
-        const list = document.getElementById('components-list');
-        const totalSpan = document.getElementById('total-k');
-        list.innerHTML = components.map(c => `
-            <div class="suggestion-item">
-                ${c.qtd}x ${c.name} (K=${c.k.toFixed(1)})
-                <button onclick="removeComponent(${components.indexOf(c)})" style="float: right; padding: 0.2rem 0.5rem;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `).join('');
-        totalSpan.textContent = totalK.toFixed(1);
-    }
-
-    function removeComponent(index) {
-        totalK -= components[index].k * components[index].qtd;
-        components.splice(index, 1);
+    const type = document.getElementById('component-type');
+    const qtd = parseInt(document.getElementById('component-qtd').value) || 0; // Garante valor numérico
+    const kValue = parseFloat(type.value);
+    const componentName = type.options[type.selectedIndex].text.split(' (')[0]; // Remove redundância
+    
+    if(qtd > 0) {
+        components.push({name: componentName, qtd: qtd, k: kValue});
+        totalK += kValue * qtd;
         updateComponentsList();
+        document.getElementById('component-qtd').value = 0; // Reseta o input
     }
+}
+
+   function updateComponentsList() {
+    const list = document.getElementById('components-list');
+    const totalSpan = document.getElementById('total-k');
+    
+    list.innerHTML = components.map((c, index) => `
+        <div class="suggestion-item">
+            <strong>${c.qtd}x</strong> ${c.name} (K=${c.k.toFixed(1)})
+            <button onclick="removeComponent(${index})" class="btn-remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `).join('');
+    
+    totalSpan.textContent = totalK.toFixed(1); // Atualiza ΣK
+}
+
+function removeComponent(index) {
+    totalK -= components[index].k * components[index].qtd; // Subtrai o K correto
+    components.splice(index, 1);
+    updateComponentsList();
+}
     function calculateFullSystem() {
         // ETAPA 1: Cálculo da Vazão
         const population = parseFloat(document.getElementById('population').value);
