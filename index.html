@@ -106,7 +106,7 @@
             font-size: 0.95rem;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 1rem;
             border: 2px solid #e9ecef;
@@ -117,7 +117,7 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--accent);
             background-color: white;
@@ -279,7 +279,7 @@
             100% { background-position-x: 1440px; }
         }
 
-                /* Adicione esta classe para os itens de resultado */
+        /* Adicione esta classe para os itens de resultado */
         .result-item {
             margin: 1rem 0;
             padding: 0.8rem;
@@ -288,7 +288,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-                .suggestions {
+        .suggestions {
             margin-top: 1.5rem;
             padding: 1.2rem;
             background: #f8f9fa;
@@ -308,6 +308,9 @@
             background: white;
             border-radius: 0.5rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .safety-button {
@@ -317,11 +320,11 @@
         }
 
         .suggestion-item.warning {
-    background: #ffe5e5;
-    border-left-color: var(--error);
-}
+            background: #ffe5e5;
+            border-left-color: var(--error);
+        }
 
-          .components-section {
+        .components-section {
             border: 2px solid var(--primary);
             border-radius: 0.8rem;
             padding: 1rem;
@@ -332,6 +335,7 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
+            align-items: end;
         }
         
         .component-select {
@@ -347,15 +351,42 @@
             color: #6c757d;
             margin-top: 0.3rem;
         }
+        
         .btn-remove {
-    float: right;
-    padding: 0.2rem 0.5rem;
-    background: var(--error);
-    border: none;
-    border-radius: 0.3rem;
-    color: white;
-    cursor: pointer;
-}
+            padding: 0.3rem 0.6rem;
+            background: var(--error);
+            border: none;
+            border-radius: 0.3rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-add {
+            padding: 0.8rem 1rem;
+            background: var(--success);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .total-k-display {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .components-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -385,58 +416,68 @@
             <input type="number" id="time" placeholder="Ex: 16">
         </div>
 
-          <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
+        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
 
         <div class="components-section">
             <h4><i class="fas fa-tools"></i> Componentes Hidráulicos</h4>
             
             <div class="component-group">
-                <select class="component-select" id="component-type">
-                    <option value="0.9">Cotovelo 90° (K=0.9)</option>
-                    <option value="0.4">Cotovelo 45° (K=0.4)</option>
-                    <option value="10">Válvula de retenção (K=10)</option>
-                    <option value="0.2">Válvula de gaveta (K=0.2)</option>
-                    <option value="1.5">Tê passagem lateral (K=1.5)</option>
-                </select>
-                <input type="number" class="component-qtd" id="component-qtd" min="0" value="0" placeholder="Qtd">
-                <button type="button" onclick="addComponent()" style="padding: 0.5rem;">
-                    <i class="fas fa-plus"></i>
+                <div class="component-select">
+                    <select id="component-type">
+                        <option value="0.9">Cotovelo 90° (K=0.9)</option>
+                        <option value="0.4">Cotovelo 45° (K=0.4)</option>
+                        <option value="0.2">Cotovelo 22,5° (K=0.2)</option>
+                        <option value="10">Válvula de retenção (K=10)</option>
+                        <option value="0.2">Válvula de gaveta aberta (K=0.2)</option>
+                        <option value="5.6">Válvula borboleta (K=5.6)</option>
+                        <option value="8.5">Válvula globo (K=8.5)</option>
+                        <option value="1.5">Tê passagem lateral (K=1.5)</option>
+                        <option value="0.6">Tê passagem direta (K=0.6)</option>
+                        <option value="1.8">Redução cônica (K=1.8)</option>
+                    </select>
+                </div>
+                <div class="component-qtd">
+                    <input type="number" id="component-qtd" min="0" value="1" placeholder="Qtd">
+                </div>
+                <button type="button" onclick="addComponent()" class="btn-add">
+                    <i class="fas fa-plus"></i> Adicionar
                 </button>
             </div>
             
-            <div id="components-list"></div>
-            <div class="unit-hint">ΣK Total: <span id="total-k">0</span></div>
+            <div class="components-list" id="components-list"></div>
+            
+            <div class="total-k-display">
+                ΣK Total: <span id="total-k">0.0</span>
+            </div>
         </div>
-
-        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
-
         
         <div class="input-group">
             <label for="pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
             <input type="number" id="pipe-diameter" placeholder="Ex: 150">
         </div>
 
-<div class="input-group">
-    <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
-    <input type="number" id="roughness" step="0.001" 
-           value="0.0015" 
-           placeholder="Ex: 0.015"
-           pattern="[0-9]+([,\.][0-9]+)?">
-    <div class="unit-hint">PVC = 0.0015mm | Aço = 0.15mm</div>
-</div>
-<div class="input-group">
-    <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
-    <input type="number" id="viscosity" step="1e-7" 
-           value="0.000001" 
-           placeholder="Ex: 1e-6"
-           pattern="[0-9]e-[0-9]">
-    <div class="unit-hint">Água a 20°C = 1e-6 m²/s</div>
-</div>
-
+        <div class="input-group">
+            <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
+            <input type="number" id="roughness" step="0.001" 
+                   value="0.0015" 
+                   placeholder="Ex: 0.015"
+                   pattern="[0-9]+([,\.][0-9]+)?">
+            <div class="unit-hint">PVC = 0.0015mm | Aço = 0.15mm</div>
+        </div>
 
         <div class="input-group">
-            <label for="local-losses"><i class="fas fa-water"></i> Perdas Localizadas (ΣK)</label>
-            <input type="number" id="local-losses" placeholder="Ex: 2.5 (cotovelos + válvulas)" step="0.1" value="0">
+            <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
+            <input type="number" id="viscosity" step="1e-7" 
+                   value="0.000001" 
+                   placeholder="Ex: 1e-6"
+                   pattern="[0-9]e-[0-9]">
+            <div class="unit-hint">Água a 20°C = 1e-6 m²/s</div>
+        </div>
+
+        <div class="input-group">
+            <label for="local-losses"><i class="fas fa-water"></i> Perdas Localizadas Adicionais (ΣK)</label>
+            <input type="number" id="local-losses" placeholder="Ex: 2.5 (outras perdas)" step="0.1" value="0">
+            <div class="unit-hint">Perdas não incluídas na lista acima</div>
         </div>
 
         <div class="input-group">
@@ -492,45 +533,56 @@
     </div>
 
 <script>
-
-     let totalK = 0;
+    let totalK = 0;
     const components = [];
 
     function addComponent() {
-    const type = document.getElementById('component-type');
-    const qtd = parseInt(document.getElementById('component-qtd').value) || 0; // Garante valor numérico
-    const kValue = parseFloat(type.value);
-    const componentName = type.options[type.selectedIndex].text.split(' (')[0]; // Remove redundância
-    
-    if(qtd > 0) {
-        components.push({name: componentName, qtd: qtd, k: kValue});
-        totalK += kValue * qtd;
-        updateComponentsList();
-        document.getElementById('component-qtd').value = 0; // Reseta o input
+        const type = document.getElementById('component-type');
+        const qtd = parseInt(document.getElementById('component-qtd').value) || 0;
+        const kValue = parseFloat(type.value);
+        const componentName = type.options[type.selectedIndex].text.split(' (')[0];
+        
+        if(qtd > 0) {
+            components.push({name: componentName, qtd: qtd, k: kValue});
+            totalK += kValue * qtd;
+            updateComponentsList();
+            document.getElementById('component-qtd').value = 1; // Reseta para 1
+            updateTotalKInForm();
+        }
     }
-}
 
-   function updateComponentsList() {
-    const list = document.getElementById('components-list');
-    const totalSpan = document.getElementById('total-k');
-    
-    list.innerHTML = components.map((c, index) => `
-        <div class="suggestion-item">
-            <strong>${c.qtd}x</strong> ${c.name} (K=${c.k.toFixed(1)})
-            <button onclick="removeComponent(${index})" class="btn-remove">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `).join('');
-    
-    totalSpan.textContent = totalK.toFixed(1); // Atualiza ΣK
-}
+    function updateComponentsList() {
+        const list = document.getElementById('components-list');
+        const totalSpan = document.getElementById('total-k');
+        
+        list.innerHTML = components.map((c, index) => `
+            <div class="suggestion-item">
+                <div>
+                    <strong>${c.qtd}x</strong> ${c.name} 
+                    <small style="color: #6c757d;">(K=${c.k} cada, Total=${(c.k * c.qtd).toFixed(1)})</small>
+                </div>
+                <button onclick="removeComponent(${index})" class="btn-remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `).join('');
+        
+        totalSpan.textContent = totalK.toFixed(1);
+    }
 
-function removeComponent(index) {
-    totalK -= components[index].k * components[index].qtd; // Subtrai o K correto
-    components.splice(index, 1);
-    updateComponentsList();
-}
+    function removeComponent(index) {
+        totalK -= components[index].k * components[index].qtd;
+        components.splice(index, 1);
+        updateComponentsList();
+        updateTotalKInForm();
+    }
+
+    function updateTotalKInForm() {
+        // Atualiza o campo de perdas localizadas automaticamente
+        const currentAdditional = parseFloat(document.getElementById('local-losses').value) || 0;
+        // Não sobrescreve o valor adicional, apenas mantém o total visível
+    }
+
     function calculateFullSystem() {
         // ETAPA 1: Cálculo da Vazão
         const population = parseFloat(document.getElementById('population').value);
@@ -538,23 +590,29 @@ function removeComponent(index) {
         const time = parseFloat(document.getElementById('time').value);
 
         if (!population || !consumption || !time) {
-            showError('Preencha todos os campos!');
+            showError('Preencha todos os campos de vazão!');
             return;
         }
 
         // Cálculos hidráulicos
         const dailyDemand = population * consumption; 
-        const Q_lps = dailyDemand / (time * 3600); // m³/s
-        const Q_m3h = Q_lps * 3600; // m³/h
+        const Q_lps = dailyDemand / (time * 3600);
+        const Q_m3h = Q_lps * 3600;
 
         // ETAPA 2: Cálculo do Recalque
-        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // m
-        const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
+        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000;
+        const ε = parseFloat(document.getElementById('roughness').value) / 1000;
         const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6;
         const L = parseFloat(document.getElementById('pipe-length').value);
         const H_stat = parseFloat(document.getElementById('static-height').value);
-        const K = parseFloat(document.getElementById('local-losses').value) || 0;
+        const K_additional = parseFloat(document.getElementById('local-losses').value) || 0;
+        const K_total = totalK + K_additional; // Soma os componentes + perdas adicionais
         const g = 9.81;
+
+        if (!D || !L || !H_stat) {
+            showError('Preencha todos os campos de recalque!');
+            return;
+        }
 
         // Cálculos adicionais
         const A = Math.PI * Math.pow(D/2, 2);
@@ -568,7 +626,7 @@ function removeComponent(index) {
 
         // Perdas de carga
         const hf = f * (L/D) * (Math.pow(V, 2)/(2*g));
-        const h_local = K * (Math.pow(V, 2)/(2*g));
+        const h_local = K_total * (Math.pow(V, 2)/(2*g));
         const H_total = H_stat + hf + h_local;
 
         // Potência da bomba
@@ -583,6 +641,7 @@ function removeComponent(index) {
 
         // Sugestões
         calculateSafetyMargins(Q_m3h, H_total, P, f);
+        document.getElementById('suggestions').classList.add('active');
     }
 
     function calculateSafetyMargins(flow, head, power, f) {
