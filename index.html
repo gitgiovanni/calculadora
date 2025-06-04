@@ -390,6 +390,55 @@
             max-height: 200px;
             overflow-y: auto;
         }
+
+        .flow-input-toggle {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .flow-section {
+            border: 2px solid var(--accent);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-direct {
+            display: none;
+        }
+
+        .result-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+            background: white;
+            border-radius: 0.5rem;
+        }
+
+        .result-section h3 {
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .result-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -403,20 +452,36 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 1rem; color: var(--primary);">1. Cálculo da Vazão</h3>
-        <div class="input-group">
-            <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
-            <input type="number" id="population" placeholder="Ex: 15000">
-        </div>
+        <div class="flow-section">
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">1. Determinação da Vazão</h3>
+            
+            <button type="button" onclick="toggleFlowInput()" class="flow-input-toggle" id="flow-toggle">
+                <i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta
+            </button>
 
-        <div class="input-group">
-            <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
-            <input type="number" id="consumption" placeholder="Ex: 200">
-        </div>
+            <div class="flow-calculated" id="flow-calculated">
+                <div class="input-group">
+                    <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
+                    <input type="number" id="population" placeholder="Ex: 15000">
+                </div>
 
-        <div class="input-group">
-            <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
-            <input type="number" id="time" placeholder="Ex: 16">
+                <div class="input-group">
+                    <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
+                    <input type="number" id="consumption" placeholder="Ex: 200">
+                </div>
+
+                <div class="input-group">
+                    <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
+                    <input type="number" id="time" placeholder="Ex: 16">
+                </div>
+            </div>
+
+            <div class="flow-direct" id="flow-direct">
+                <div class="input-group">
+                    <label for="direct-flow"><i class="fas fa-water"></i> Vazão Direta (m³/h)</label>
+                    <input type="number" id="direct-flow" placeholder="Ex: 8.33" step="0.01">
+                </div>
+            </div>
         </div>
 
         <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
@@ -437,6 +502,7 @@
                         <option value="1.5">Tê passagem lateral (K=1.5)</option>
                         <option value="0.6">Tê passagem direta (K=0.6)</option>
                         <option value="1.8">Redução cônica (K=1.8)</option>
+                        <option value="15">Válvula de pé com crivo (K=15)</option>
                     </select>
                 </div>
                 <div class="component-qtd">
@@ -498,20 +564,56 @@
         </button>
 
         <div class="result" id="result">
-            <h2>Resultados</h2>
-            <div class="result-item">
-                <span>Vazão Necessária:</span>
-                <span class="result-value" id="flow-result">0,00</span> m³/h
+            <h2>Resultados do Sistema</h2>
+            
+            <div class="result-section">
+                <h3><i class="fas fa-tint"></i> Vazão</h3>
+                <div class="result-detail">
+                    <span>Vazão de Projeto:</span>
+                    <span class="result-value" id="flow-result">0,00</span> m³/h
+                </div>
             </div>
-            <div class="result-item">
-                <span>Altura Manométrica Total:</span>
-                <span class="result-value" id="total-head">0,00</span> m
+
+            <div class="result-section">
+                <h3><i class="fas fa-arrow-down"></i> Perdas de Carga</h3>
+                <div class="result-detail">
+                    <span>Perda Contínua (hf):</span>
+                    <span id="continuous-loss">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Perda Localizada (hl):</span>
+                    <span id="local-loss">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Perda Total:</span>
+                    <span id="total-loss">0,00</span> m
+                </div>
             </div>
-            <div class="result-item">
-                <span>Potência da Bomba:</span>
-                <span class="result-value" id="pump-power">0,00</span> kW
+
+            <div class="result-section">
+                <h3><i class="fas fa-mountain"></i> Alturas Manométricas</h3>
+                <div class="result-detail">
+                    <span>Altura Estática:</span>
+                    <span id="static-head">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Altura Dinâmica:</span>
+                    <span id="dynamic-head">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span><strong>Altura Manométrica Total:</strong></span>
+                    <span class="result-value" id="total-head">0,00</span> m
+                </div>
             </div>
-            <p class="result-unit">* Eficiência considerada: 70%</p>
+
+            <div class="result-section">
+                <h3><i class="fas fa-bolt"></i> Potência</h3>
+                <div class="result-detail">
+                    <span>Potência da Bomba:</span>
+                    <span class="result-value" id="pump-power">0,00</span> kW
+                </div>
+                <p class="result-unit">* Eficiência considerada: 70%</p>
+            </div>
         </div>
 
         <div class="suggestions" id="suggestions">
@@ -538,6 +640,25 @@
 <script>
     let totalK = 0;
     const components = [];
+    let flowInputMode = 'calculated'; // 'calculated' ou 'direct'
+
+    function toggleFlowInput() {
+        const button = document.getElementById('flow-toggle');
+        const calculated = document.getElementById('flow-calculated');
+        const direct = document.getElementById('flow-direct');
+        
+        if (flowInputMode === 'calculated') {
+            flowInputMode = 'direct';
+            calculated.style.display = 'none';
+            direct.style.display = 'block';
+            button.innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Cálculo por Parâmetros';
+        } else {
+            flowInputMode = 'calculated';
+            calculated.style.display = 'block';
+            direct.style.display = 'none';
+            button.innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta';
+        }
+    }
 
     function addComponent() {
         const type = document.getElementById('component-type');
@@ -586,24 +707,35 @@
     }
 
     function calculateFullSystem() {
-        // ETAPA 1: Cálculo da Vazão
-        const population = parseFloat(document.getElementById('population').value);
-        const consumption = parseFloat(document.getElementById('consumption').value);
-        const time = parseFloat(document.getElementById('time').value);
+        let Q_m3h, Q_lps;
 
-        if (!population || !consumption || !time) {
-            showError('Preencha todos os campos de vazão!');
-            return;
+        // ETAPA 1: Determinar a Vazão
+        if (flowInputMode === 'direct') {
+            Q_m3h = parseFloat(document.getElementById('direct-flow').value);
+            if (!Q_m3h) {
+                showError('Preencha a vazão direta!');
+                return;
+            }
+            Q_lps = Q_m3h / 3.6; // Converte m³/h para L/s
+        } else {
+            const population = parseFloat(document.getElementById('population').value);
+            const consumption = parseFloat(document.getElementById('consumption').value);
+            const time = parseFloat(document.getElementById('time').value);
+
+            if (!population || !consumption || !time) {
+                showError('Preencha todos os campos de vazão!');
+                return;
+            }
+
+            // CORREÇÃO DO ERRO: usar valores corretos sem divisão por 1000
+            const dailyDemand = population * consumption; // L/dia
+            Q_lps = dailyDemand / (time * 3600); // L/s
+            Q_m3h = Q_lps * 3.6; // m³/h (conversão correta: L/s * 3.6 = m³/h)
         }
 
-        // Cálculos hidráulicos
-        const dailyDemand = population * consumption; 
-        const Q_lps = dailyDemand / (time * 3600);
-        const Q_m3h = Q_lps * 3600;
-
         // ETAPA 2: Cálculo do Recalque
-        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000;
-        const ε = parseFloat(document.getElementById('roughness').value) / 1000;
+        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // mm para m
+        const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
         const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6;
         const L = parseFloat(document.getElementById('pipe-length').value);
         const H_stat = parseFloat(document.getElementById('static-height').value);
@@ -616,26 +748,32 @@
             return;
         }
 
-        // Cálculos adicionais
-        const A = Math.PI * Math.pow(D/2, 2);
-        const V = Q_lps / A;
-        const Re = (V * D) / ν;
+        // Cálculos hidráulicos
+        const A = Math.PI * Math.pow(D/2, 2); // Área da seção transversal
+        const V = (Q_lps / 1000) / A; // Velocidade (convertendo L/s para m³/s)
+        const Re = (V * D) / ν; // Número de Reynolds
 
-        // Cálculo do fator de atrito (f)
+        // Cálculo do fator de atrito (Swamee-Jain)
         const term1 = Math.pow(ε/D / 3.7, 1.11);
         const term2 = 6.9 / Re;
         const f = Math.pow(-1.8 * Math.log10(term1 + term2), -2);
 
         // Perdas de carga
-        const hf = f * (L/D) * (Math.pow(V, 2)/(2*g));
-        const h_local = K_total * (Math.pow(V, 2)/(2*g));
-        const H_total = H_stat + hf + h_local;
+        const hf = f * (L/D) * (Math.pow(V, 2)/(2*g)); // Perda contínua
+        const h_local = K_total * (Math.pow(V, 2)/(2*g)); // Perda localizada
+        const h_total = hf + h_local; // Perda total
+        const H_total = H_stat + h_total; // Altura manométrica total
 
         // Potência da bomba
-        const P = (Q_lps * 1000 * 9.81 * H_total) / (0.7 * 1000);
+        const P = ((Q_lps / 1000) * 1000 * 9.81 * H_total) / (0.7 * 1000); // kW
 
         // Exibir resultados
         document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
+        document.getElementById('continuous-loss').textContent = formatNumber(hf);
+        document.getElementById('local-loss').textContent = formatNumber(h_local);
+        document.getElementById('total-loss').textContent = formatNumber(h_total);
+        document.getElementById('static-head').textContent = formatNumber(H_stat);
+        document.getElementById('dynamic-head').textContent = formatNumber(h_total);
         document.getElementById('total-head').textContent = formatNumber(H_total);
         document.getElementById('pump-power').textContent = formatNumber(P);
         document.getElementById('friction-factor').textContent = f.toFixed(4);
