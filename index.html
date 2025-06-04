@@ -15,6 +15,7 @@
             --success: #2ec4b6;
             --warning: #ff9f1c;
             --error: #e71d36;
+            --info: #3f37c9;
         }
 
         * {
@@ -41,7 +42,7 @@
                 0 20px 50px rgba(0, 0, 0, 0.1),
                 0 10px 20px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease;
@@ -64,8 +65,9 @@
         .header {
             display: flex;
             align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             gap: 1rem;
+            position: relative;
         }
 
         .header i {
@@ -94,7 +96,7 @@
         }
 
         .input-group {
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
             position: relative;
         }
 
@@ -104,6 +106,9 @@
             color: var(--dark);
             font-weight: 500;
             font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         input, select {
@@ -145,6 +150,10 @@
             box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
             position: relative;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         button:hover {
@@ -181,7 +190,6 @@
             padding: 1.8rem;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 0.8rem;
-            text-align: center;
             display: none;
             border: 1px solid rgba(0,0,0,0.05);
             position: relative;
@@ -208,6 +216,9 @@
             margin-bottom: 1.2rem;
             font-weight: 600;
             font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         .result-value {
@@ -321,7 +332,7 @@
 
         .suggestion-item.warning {
             background: #ffe5e5;
-            border-left-color: var(--error);
+            border-left: 4px solid var(--error);
         }
 
         .components-section {
@@ -352,6 +363,9 @@
             font-size: 0.8rem;
             color: #6c757d;
             margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
         
         .btn-remove {
@@ -362,6 +376,9 @@
             color: white;
             cursor: pointer;
             font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-add {
@@ -373,6 +390,10 @@
             cursor: pointer;
             white-space: nowrap;
             min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .total-k-display {
@@ -383,6 +404,8 @@
             font-weight: bold;
             text-align: center;
             margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
         }
 
         .components-list {
@@ -400,6 +423,9 @@
             margin-bottom: 1rem;
             cursor: pointer;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .flow-section {
@@ -424,6 +450,9 @@
         .result-section h3 {
             margin-bottom: 0.8rem;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         .result-grid {
@@ -439,13 +468,140 @@
             padding: 0.5rem 0;
             border-bottom: 1px solid #eee;
         }
+        
+        .material-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .material-btn {
+            padding: 0.4rem 0.8rem;
+            background: #e9ecef;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        
+        .material-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .material-btn:hover {
+            background: #d8dee6;
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: var(--info);
+        }
+        
+        .velocity-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            background: var(--success);
+        }
+        
+        .velocity-indicator.warning {
+            background: var(--warning);
+        }
+        
+        .velocity-indicator.danger {
+            background: var(--error);
+        }
+        
+        .reset-btn {
+            background: var(--dark) !important;
+            margin-top: 1rem;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .chart-container.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        .toggle-chart {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .history-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 0.8rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .history-title {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .history-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .history-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .empty-history {
+            text-align: center;
+            color: #6c757d;
+            padding: 1rem;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
     <div class="calculator">
         <div class="wave"></div>
         <div class="header">
-            <i class="fas fa-tint"></i>
+            <i class="fas fa-water"></i>
             <div>
                 <h1>HydroCalc Recalque</h1>
                 <p class="subtitle">Cálculo completo de vazão e dimensionamento hidráulico</p>
@@ -453,7 +609,7 @@
         </div>
 
         <div class="flow-section">
-            <h3 style="margin-bottom: 1rem; color: var(--primary);">1. Determinação da Vazão</h3>
+            <h3><i class="fas fa-tint"></i> 1. Determinação da Vazão</h3>
             
             <button type="button" onclick="toggleFlowInput()" class="flow-input-toggle" id="flow-toggle">
                 <i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta
@@ -463,16 +619,19 @@
                 <div class="input-group">
                     <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
                     <input type="number" id="population" placeholder="Ex: 15000">
+                    <div class="error-message" id="population-error">Valor inválido</div>
                 </div>
 
                 <div class="input-group">
                     <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
-                    <input type="number" id="consumption" placeholder="Ex: 200">
+                    <input type="number" id="consumption" placeholder="Ex: 200" value="200">
+                    <div class="error-message" id="consumption-error">Valor inválido</div>
                 </div>
 
                 <div class="input-group">
                     <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
-                    <input type="number" id="time" placeholder="Ex: 16">
+                    <input type="number" id="time" placeholder="Ex: 16" value="16">
+                    <div class="error-message" id="time-error">Valor inválido (1-24)</div>
                 </div>
             </div>
 
@@ -480,11 +639,12 @@
                 <div class="input-group">
                     <label for="direct-flow"><i class="fas fa-water"></i> Vazão Direta (m³/h)</label>
                     <input type="number" id="direct-flow" placeholder="Ex: 8.33" step="0.01">
+                    <div class="error-message" id="flow-error">Valor inválido</div>
                 </div>
             </div>
         </div>
 
-        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">2. Parâmetros de Recalque</h3>
+        <h3><i class="fas fa-tools"></i> 2. Parâmetros de Recalque</h3>
 
         <div class="components-section">
             <h4><i class="fas fa-tools"></i> Componentes Hidráulicos</h4>
@@ -516,13 +676,15 @@
             <div class="components-list" id="components-list"></div>
             
             <div class="total-k-display">
-                ΣK Total: <span id="total-k">0.0</span>
+                <span>ΣK Total:</span> 
+                <span id="total-k">0.0</span>
             </div>
         </div>
         
         <div class="input-group">
             <label for="pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
             <input type="number" id="pipe-diameter" placeholder="Ex: 150">
+            <div class="error-message" id="diameter-error">Valor inválido</div>
         </div>
 
         <div class="input-group">
@@ -531,7 +693,17 @@
                    value="0.0015" 
                    placeholder="Ex: 0.015"
                    pattern="[0-9]+([,\.][0-9]+)?">
-            <div class="unit-hint">PVC = 0.0015mm | Aço = 0.15mm</div>
+            <div class="unit-hint">
+                <i class="fas fa-info-circle"></i> 
+                PVC = 0.0015mm | Aço = 0.15mm | Concreto = 0.3mm
+            </div>
+            <div class="material-selector">
+                <button class="material-btn" onclick="setMaterial('pvc')">PVC</button>
+                <button class="material-btn" onclick="setMaterial('aco')">Aço</button>
+                <button class="material-btn" onclick="setMaterial('concreto')">Concreto</button>
+                <button class="material-btn" onclick="setMaterial('cobre')">Cobre</button>
+                <button class="material-btn" onclick="setMaterial('ferro')">Ferro Fundido</button>
+            </div>
         </div>
 
         <div class="input-group">
@@ -540,37 +712,63 @@
                    value="0.000001" 
                    placeholder="Ex: 1e-6"
                    pattern="[0-9]e-[0-9]">
-            <div class="unit-hint">Água a 20°C = 1e-6 m²/s</div>
+            <div class="unit-hint">
+                <i class="fas fa-info-circle"></i> 
+                Água a 20°C = 1e-6 m²/s | Água a 40°C = 0.66e-6 m²/s
+            </div>
         </div>
 
         <div class="input-group">
             <label for="local-losses"><i class="fas fa-water"></i> Perdas Localizadas Adicionais (ΣK)</label>
             <input type="number" id="local-losses" placeholder="Ex: 2.5 (outras perdas)" step="0.1" value="0">
-            <div class="unit-hint">Perdas não incluídas na lista acima</div>
+            <div class="unit-hint">
+                <i class="fas fa-info-circle"></i> 
+                Perdas não incluídas na lista acima
+            </div>
         </div>
 
         <div class="input-group">
             <label for="static-height"><i class="fas fa-mountain"></i> Altura Estática (m)</label>
             <input type="number" id="static-height" placeholder="Ex: 30">
+            <div class="error-message" id="height-error">Valor inválido</div>
         </div>
 
         <div class="input-group">
             <label for="pipe-length"><i class="fas fa-ruler"></i> Comprimento da Tubulação (m)</label>
             <input type="number" id="pipe-length" placeholder="Ex: 500">
+            <div class="error-message" id="length-error">Valor inválido</div>
+        </div>
+        
+        <div class="input-group">
+            <label for="efficiency"><i class="fas fa-percentage"></i> Eficiência da Bomba (%)</label>
+            <input type="number" id="efficiency" placeholder="Ex: 70" value="70" min="1" max="100">
         </div>
 
         <button onclick="calculateFullSystem()">
             <i class="fas fa-calculator"></i> Calcular Sistema Completo
         </button>
+        
+        <button onclick="resetForm()" class="reset-btn">
+            <i class="fas fa-redo"></i> Limpar Tudo
+        </button>
+        
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin"></i> Calculando...
+        </div>
 
         <div class="result" id="result">
-            <h2>Resultados do Sistema</h2>
+            <h2><i class="fas fa-chart-line"></i> Resultados do Sistema</h2>
             
             <div class="result-section">
-                <h3><i class="fas fa-tint"></i> Vazão</h3>
+                <h3><i class="fas fa-tint"></i> Vazão e Velocidade</h3>
                 <div class="result-detail">
                     <span>Vazão de Projeto:</span>
                     <span class="result-value" id="flow-result">0,00</span> m³/h
+                </div>
+                <div class="result-detail">
+                    <span>Velocidade do Fluxo:</span>
+                    <span id="velocity-result">0,00</span> m/s
+                    <span class="velocity-indicator" id="velocity-indicator"></span>
                 </div>
             </div>
 
@@ -612,7 +810,17 @@
                     <span>Potência da Bomba:</span>
                     <span class="result-value" id="pump-power">0,00</span> kW
                 </div>
-                <p class="result-unit">* Eficiência considerada: 70%</p>
+                <p class="result-unit">* Eficiência considerada: <span id="efficiency-value">70</span>%</p>
+            </div>
+            
+            <div class="toggle-chart">
+                <button class="flow-input-toggle" onclick="toggleChart()">
+                    <i class="fas fa-chart-pie"></i> Ver Gráfico de Perdas
+                </button>
+            </div>
+            
+            <div class="chart-container" id="chart-container">
+                <canvas id="losses-chart"></canvas>
             </div>
         </div>
 
@@ -630,17 +838,56 @@
                 <strong>Fator de Atrito:</strong>
                 <span id="friction-factor">0</span>
             </div>
-            <div class="suggestion-item" id="suggested-power-item" style="display: none;">
+            <div class="suggestion-item">
                 <strong>Potência Comercial Próxima:</strong>
                 <span id="suggested-power">0</span> kW
             </div>
+            <div class="suggestion-item" id="velocity-suggestion">
+                <strong>Velocidade:</strong>
+                <span id="velocity-status">Dentro da faixa recomendada</span>
+            </div>
+        </div>
+        
+        <div class="history-section" id="history-section">
+            <h3><i class="fas fa-history"></i> Histórico de Cálculos</h3>
+            <div id="history-list" class="empty-history">
+                Nenhum cálculo realizado ainda
+            </div>
+        </div>
+        
+        <div class="water-mark">
+            <i class="fas fa-water"></i>
         </div>
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Material roughness values
+    const materials = {
+        pvc: 0.0015,
+        aco: 0.15,
+        concreto: 0.3,
+        cobre: 0.001,
+        ferro: 0.25
+    };
+    
     let totalK = 0;
     const components = [];
-    let flowInputMode = 'calculated'; // 'calculated' ou 'direct'
+    let flowInputMode = 'calculated';
+    let calculationHistory = [];
+    
+    // Chart instance
+    let lossesChart = null;
+
+    function setMaterial(type) {
+        document.getElementById('roughness').value = materials[type];
+        
+        // Highlight selected button
+        document.querySelectorAll('.material-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
 
     function toggleFlowInput() {
         const button = document.getElementById('flow-toggle');
@@ -683,6 +930,7 @@
             <div class="suggestion-item">
                 <div>
                     <strong>${c.qtd}x ${c.name}</strong>
+                    <div style="font-size:0.8rem;color:#6c757d;">K = ${c.k}</div>
                 </div>
                 <button onclick="removeComponent(${index})" class="btn-remove">
                     <i class="fas fa-times"></i>
@@ -705,86 +953,222 @@
         const currentAdditional = parseFloat(document.getElementById('local-losses').value) || 0;
         // Não sobrescreve o valor adicional, apenas mantém o total visível
     }
-
-    function calculateFullSystem() {
-        let Q_m3h, Q_lps;
-
-        // ETAPA 1: Determinar a Vazão
+    
+    function resetForm() {
+        // Clear input fields
+        document.getElementById('population').value = '';
+        document.getElementById('consumption').value = '200';
+        document.getElementById('time').value = '16';
+        document.getElementById('direct-flow').value = '';
+        document.getElementById('pipe-diameter').value = '';
+        document.getElementById('roughness').value = '0.0015';
+        document.getElementById('viscosity').value = '0.000001';
+        document.getElementById('local-losses').value = '0';
+        document.getElementById('static-height').value = '';
+        document.getElementById('pipe-length').value = '';
+        document.getElementById('efficiency').value = '70';
+        
+        // Clear components
+        components.length = 0;
+        totalK = 0;
+        updateComponentsList();
+        
+        // Hide results
+        document.getElementById('result').classList.remove('active');
+        document.getElementById('suggestions').classList.remove('active');
+        document.getElementById('chart-container').classList.remove('active');
+        
+        // Reset material buttons
+        document.querySelectorAll('.material-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Hide errors
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+    
+    function validateInputs() {
+        let isValid = true;
+        
+        // Hide all errors first
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Validate based on flow input mode
         if (flowInputMode === 'direct') {
-            Q_m3h = parseFloat(document.getElementById('direct-flow').value);
-            if (!Q_m3h) {
-                showError('Preencha a vazão direta!');
-                return;
+            const flow = parseFloat(document.getElementById('direct-flow').value);
+            if (!flow || flow <= 0) {
+                document.getElementById('flow-error').style.display = 'block';
+                isValid = false;
             }
-            Q_lps = Q_m3h / 3.6; // Converte m³/h para L/s
         } else {
             const population = parseFloat(document.getElementById('population').value);
             const consumption = parseFloat(document.getElementById('consumption').value);
             const time = parseFloat(document.getElementById('time').value);
-
-            if (!population || !consumption || !time) {
-                showError('Preencha todos os campos de vazão!');
-                return;
+            
+            if (!population || population <= 0) {
+                document.getElementById('population-error').style.display = 'block';
+                isValid = false;
             }
-
-            // CORREÇÃO DO ERRO: usar valores corretos sem divisão por 1000
-            const dailyDemand = population * consumption; // L/dia
-            Q_lps = dailyDemand / (time * 3600); // L/s
-            Q_m3h = Q_lps * 3.6; // m³/h (conversão correta: L/s * 3.6 = m³/h)
+            
+            if (!consumption || consumption <= 0) {
+                document.getElementById('consumption-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!time || time <= 0 || time > 24) {
+                document.getElementById('time-error').style.display = 'block';
+                isValid = false;
+            }
         }
-
-        // ETAPA 2: Cálculo do Recalque
-        const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // mm para m
-        const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
-        const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6;
-        const L = parseFloat(document.getElementById('pipe-length').value);
-        const H_stat = parseFloat(document.getElementById('static-height').value);
-        const K_additional = parseFloat(document.getElementById('local-losses').value) || 0;
-        const K_total = totalK + K_additional; // Soma os componentes + perdas adicionais
-        const g = 9.81;
-
-        if (!D || !L || !H_stat) {
-            showError('Preencha todos os campos de recalque!');
-            return;
+        
+        // Validate recalque parameters
+        const diameter = parseFloat(document.getElementById('pipe-diameter').value);
+        const height = parseFloat(document.getElementById('static-height').value);
+        const length = parseFloat(document.getElementById('pipe-length').value);
+        
+        if (!diameter || diameter <= 0) {
+            document.getElementById('diameter-error').style.display = 'block';
+            isValid = false;
         }
-
-        // Cálculos hidráulicos
-        const A = Math.PI * Math.pow(D/2, 2); // Área da seção transversal
-        const V = (Q_lps / 1000) / A; // Velocidade (convertendo L/s para m³/s)
-        const Re = (V * D) / ν; // Número de Reynolds
-
-        // Cálculo do fator de atrito (Swamee-Jain)
-        const term1 = Math.pow(ε/D / 3.7, 1.11);
-        const term2 = 6.9 / Re;
-        const f = Math.pow(-1.8 * Math.log10(term1 + term2), -2);
-
-        // Perdas de carga
-        const hf = f * (L/D) * (Math.pow(V, 2)/(2*g)); // Perda contínua
-        const h_local = K_total * (Math.pow(V, 2)/(2*g)); // Perda localizada
-        const h_total = hf + h_local; // Perda total
-        const H_total = H_stat + h_total; // Altura manométrica total
-
-        // Potência da bomba
-        const P = ((Q_lps / 1000) * 1000 * 9.81 * H_total) / (0.7 * 1000); // kW
-
-        // Exibir resultados
-        document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
-        document.getElementById('continuous-loss').textContent = formatNumber(hf);
-        document.getElementById('local-loss').textContent = formatNumber(h_local);
-        document.getElementById('total-loss').textContent = formatNumber(h_total);
-        document.getElementById('static-head').textContent = formatNumber(H_stat);
-        document.getElementById('dynamic-head').textContent = formatNumber(h_total);
-        document.getElementById('total-head').textContent = formatNumber(H_total);
-        document.getElementById('pump-power').textContent = formatNumber(P);
-        document.getElementById('friction-factor').textContent = f.toFixed(4);
-        document.getElementById('result').classList.add('active');
-
-        // Sugestões
-        calculateSafetyMargins(Q_m3h, H_total, P, f);
-        document.getElementById('suggestions').classList.add('active');
+        
+        if (!height || height <= 0) {
+            document.getElementById('height-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!length || length <= 0) {
+            document.getElementById('length-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        return isValid;
     }
 
-    function calculateSafetyMargins(flow, head, power, f) {
+    function calculateFullSystem() {
+        // Validate inputs
+        if (!validateInputs()) return;
+        
+        // Show loading indicator
+        document.getElementById('loading').style.display = 'block';
+        
+        // Use setTimeout to allow UI to update before heavy calculations
+        setTimeout(() => {
+            try {
+                let Q_m3h, Q_lps;
+
+                // ETAPA 1: Determinar a Vazão
+                if (flowInputMode === 'direct') {
+                    Q_m3h = parseFloat(document.getElementById('direct-flow').value);
+                    Q_lps = Q_m3h / 3.6; // Converte m³/h para L/s
+                } else {
+                    const population = parseFloat(document.getElementById('population').value);
+                    const consumption = parseFloat(document.getElementById('consumption').value);
+                    const time = parseFloat(document.getElementById('time').value);
+
+                    const dailyDemand = population * consumption; // L/dia
+                    Q_lps = dailyDemand / (time * 3600); // L/s
+                    Q_m3h = Q_lps * 3.6; // m³/h (conversão correta: L/s * 3.6 = m³/h)
+                }
+
+                // ETAPA 2: Cálculo do Recalque
+                const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // mm para m
+                const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
+                const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6;
+                const L = parseFloat(document.getElementById('pipe-length').value);
+                const H_stat = parseFloat(document.getElementById('static-height').value);
+                const K_additional = parseFloat(document.getElementById('local-losses').value) || 0;
+                const K_total = totalK + K_additional; // Soma os componentes + perdas adicionais
+                const efficiency = parseFloat(document.getElementById('efficiency').value) || 70;
+                const g = 9.81;
+
+                // Cálculos hidráulicos
+                const A = Math.PI * Math.pow(D/2, 2); // Área da seção transversal
+                const V = (Q_lps / 1000) / A; // Velocidade (convertendo L/s para m³/s)
+                const Re = (V * D) / ν; // Número de Reynolds
+
+                // Cálculo do fator de atrito (Swamee-Jain)
+                const term1 = Math.pow(ε/D / 3.7, 1.11);
+                const term2 = 6.9 / Re;
+                const f = Math.pow(-1.8 * Math.log10(term1 + term2), -2);
+
+                // Perdas de carga
+                const hf = f * (L/D) * (Math.pow(V, 2)/(2*g)); // Perda contínua
+                const h_local = K_total * (Math.pow(V, 2)/(2*g)); // Perda localizada
+                const h_total = hf + h_local; // Perda total
+                const H_total = H_stat + h_total; // Altura manométrica total
+
+                // Potência da bomba
+                const P = ((Q_lps / 1000) * 1000 * 9.81 * H_total) / ((efficiency/100) * 1000); // kW
+
+                // Exibir resultados
+                document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
+                document.getElementById('velocity-result').textContent = formatNumber(V);
+                document.getElementById('continuous-loss').textContent = formatNumber(hf);
+                document.getElementById('local-loss').textContent = formatNumber(h_local);
+                document.getElementById('total-loss').textContent = formatNumber(h_total);
+                document.getElementById('static-head').textContent = formatNumber(H_stat);
+                document.getElementById('dynamic-head').textContent = formatNumber(h_total);
+                document.getElementById('total-head').textContent = formatNumber(H_total);
+                document.getElementById('pump-power').textContent = formatNumber(P);
+                document.getElementById('friction-factor').textContent = f.toFixed(4);
+                document.getElementById('efficiency-value').textContent = efficiency;
+                document.getElementById('result').classList.add('active');
+
+                // Sugestões e verificações
+                calculateSafetyMargins(Q_m3h, H_total, P, f, V);
+                document.getElementById('suggestions').classList.add('active');
+                
+                // Update velocity indicator
+                updateVelocityIndicator(V);
+                
+                // Add to history
+                addToHistory({
+                    flow: Q_m3h,
+                    head: H_total,
+                    power: P,
+                    diameter: D * 1000,
+                    length: L,
+                    date: new Date()
+                });
+                
+            } catch (error) {
+                showError('Ocorreu um erro no cálculo: ' + error.message);
+            } finally {
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+            }
+        }, 100);
+    }
+    
+    function updateVelocityIndicator(velocity) {
+        const indicator = document.getElementById('velocity-indicator');
+        const suggestion = document.getElementById('velocity-suggestion');
+        
+        indicator.className = 'velocity-indicator';
+        
+        if (velocity < 0.5) {
+            indicator.classList.add('danger');
+            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--error)">Muito baixa (risco de sedimentação)</span>';
+        } else if (velocity < 1.0) {
+            indicator.classList.add('warning');
+            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--warning)">Baixa (pode causar sedimentação)</span>';
+        } else if (velocity > 2.5) {
+            indicator.classList.add('danger');
+            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--error)">Muito alta (risco de erosão e ruído)</span>';
+        } else if (velocity > 1.8) {
+            indicator.classList.add('warning');
+            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--warning)">Alta (pode causar ruído)</span>';
+        } else {
+            indicator.classList.add('success');
+            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--success)">Dentro da faixa recomendada</span>';
+        }
+    }
+
+    function calculateSafetyMargins(flow, head, power, f, velocity) {
         const suggestedFlow = flow * 1.10;
         const suggestedHead = head * 1.15;
 
@@ -794,12 +1178,132 @@
         // Potências comerciais
         const commercialPowers = [1.5, 2.2, 3.7, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200, 250, 315, 400, 500];
         const needed = power * 1.2;
-        const found = commercialPowers.find(p => p >= needed);
+        const found = commercialPowers.find(p => p >= needed) || '>500';
         
-        if (found) {
-            document.getElementById('suggested-power').textContent = found;
-            document.getElementById('suggested-power-item').style.display = 'block';
+        document.getElementById('suggested-power').textContent = found;
+    }
+    
+    function addToHistory(calculation) {
+        calculationHistory.unshift(calculation);
+        if (calculationHistory.length > 5) {
+            calculationHistory.pop();
         }
+        updateHistoryList();
+    }
+    
+    function updateHistoryList() {
+        const historyList = document.getElementById('history-list');
+        
+        if (calculationHistory.length === 0) {
+            historyList.className = 'empty-history';
+            historyList.innerHTML = 'Nenhum cálculo realizado ainda';
+            return;
+        }
+        
+        historyList.className = '';
+        historyList.innerHTML = calculationHistory.map((calc, index) => `
+            <div class="history-item" onclick="loadFromHistory(${index})">
+                <div class="history-title">
+                    <span>Cálculo #${index + 1}</span>
+                    <span>${calc.date.toLocaleTimeString()}</span>
+                </div>
+                <div class="history-details">
+                    <div>
+                        <div>Vazão</div>
+                        <div class="history-value">${formatNumber(calc.flow)} m³/h</div>
+                    </div>
+                    <div>
+                        <div>Altura</div>
+                        <div class="history-value">${formatNumber(calc.head)} m</div>
+                    </div>
+                    <div>
+                        <div>Potência</div>
+                        <div class="history-value">${formatNumber(calc.power)} kW</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function loadFromHistory(index) {
+        const calc = calculationHistory[index];
+        if (!calc) return;
+        
+        // Set flow mode to direct and populate
+        flowInputMode = 'direct';
+        document.getElementById('flow-calculated').style.display = 'none';
+        document.getElementById('flow-direct').style.display = 'block';
+        document.getElementById('flow-toggle').innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Cálculo por Parâmetros';
+        document.getElementById('direct-flow').value = calc.flow;
+        
+        // Populate other fields
+        document.getElementById('pipe-diameter').value = calc.diameter;
+        document.getElementById('static-height').value = calc.head;
+        document.getElementById('pipe-length').value = calc.length;
+        
+        // Recalculate
+        calculateFullSystem();
+    }
+    
+    function toggleChart() {
+        const container = document.getElementById('chart-container');
+        container.classList.toggle('active');
+        
+        if (container.classList.contains('active') && !lossesChart) {
+            renderLossesChart();
+        }
+    }
+    
+    function renderLossesChart() {
+        const ctx = document.getElementById('losses-chart').getContext('2d');
+        const staticHead = parseFloat(document.getElementById('static-head').textContent) || 0;
+        const continuousLoss = parseFloat(document.getElementById('continuous-loss').textContent) || 0;
+        const localLoss = parseFloat(document.getElementById('local-loss').textContent) || 0;
+        
+        lossesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Altura Estática', 'Perdas Contínuas', 'Perdas Localizadas'],
+                datasets: [{
+                    data: [staticHead, continuousLoss, localLoss],
+                    backgroundColor: [
+                        '#4361ee',
+                        '#4cc9f0',
+                        '#3a0ca3'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 12
+                            },
+                            padding: 20
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribuição da Altura Manométrica',
+                        font: {
+                            size: 14
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${formatNumber(context.parsed)} m (${Math.round(context.parsed/(staticHead+continuousLoss+localLoss)*100)}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     function formatNumber(num) {
@@ -814,6 +1318,11 @@
         result.classList.add('active');
         setTimeout(() => pumpPower.style.color = 'var(--success)', 3000);
     }
+    
+    // Initialize material buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        setMaterial('pvc');
+    });
 </script>
 </body>
 </html>
