@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HydroCalc | Calculadora de Recalque</title>
+    <title>HydroCalc | Sucção e Recalque</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #4361ee;
             --secondary: #3a0ca3;
-            --accent: #4cc9f0;
+            --suction: #4cc9f0;
+            --discharge: #f72585;
             --dark: #2b2d42;
             --light: #f8f9fa;
             --success: #2ec4b6;
@@ -42,7 +43,7 @@
                 0 20px 50px rgba(0, 0, 0, 0.1),
                 0 10px 20px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease;
@@ -59,7 +60,7 @@
             left: 0;
             width: 100%;
             height: 8px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: linear-gradient(90deg, var(--suction), var(--discharge));
         }
 
         .header {
@@ -73,7 +74,7 @@
         .header i {
             font-size: 2.2rem;
             color: var(--primary);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--suction), var(--discharge));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -83,7 +84,7 @@
             margin-bottom: 0;
             font-weight: 600;
             font-size: 1.8rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--suction), var(--discharge));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -124,7 +125,7 @@
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: var(--primary);
             background-color: white;
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
@@ -208,7 +209,7 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            background: linear-gradient(to bottom, var(--suction), var(--discharge));
         }
 
         .result h2 {
@@ -271,75 +272,64 @@
             }
         }
 
-        /* Efeito de onda animado */
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(67, 97, 238, 0.1)" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            background-repeat: no-repeat;
-            animation: wave 8s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes wave {
-            0% { background-position-x: 0; }
-            100% { background-position-x: 1440px; }
-        }
-
-        /* Adicione esta classe para os itens de resultado */
-        .result-item {
-            margin: 1rem 0;
-            padding: 0.8rem;
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .suggestions {
-            margin-top: 1.5rem;
-            padding: 1.2rem;
-            background: #f8f9fa;
-            border-radius: 0.8rem;
-            border-left: 4px solid var(--primary);
-            display: none;
-        }
-        
-        .suggestions.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .suggestion-item {
-            margin: 0.8rem 0;
-            padding: 0.8rem;
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .safety-button {
-            margin-top: 1rem;
-            background: var(--warning);
-            color: white;
-        }
-
-        .suggestion-item.warning {
-            background: #ffe5e5;
-            border-left: 4px solid var(--error);
-        }
-
-        .components-section {
-            border: 2px solid var(--primary);
+        /* Seções específicas */
+        .section {
             border-radius: 0.8rem;
             padding: 1.5rem;
             margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+        
+        .suction-section {
+            border: 2px solid var(--suction);
+        }
+        
+        .suction-section::before {
+            background: var(--suction);
+        }
+        
+        .discharge-section {
+            border: 2px solid var(--discharge);
+        }
+        
+        .discharge-section::before {
+            background: var(--discharge);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .section-title i {
+            font-size: 1.5rem;
+        }
+        
+        .suction-section .section-title i {
+            color: var(--suction);
+        }
+        
+        .discharge-section .section-title i {
+            color: var(--discharge);
+        }
+        
+        .components-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
         }
         
         .component-group {
@@ -357,15 +347,6 @@
         .component-qtd {
             flex: 1;
             min-width: 80px;
-        }
-        
-        .unit-hint {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 0.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
         }
         
         .btn-remove {
@@ -407,101 +388,51 @@
             display: flex;
             justify-content: space-between;
         }
-
-        .components-list {
-            margin-top: 1rem;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .flow-input-toggle {
-            background: var(--accent);
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .flow-section {
-            border: 2px solid var(--accent);
-            border-radius: 0.8rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .flow-direct {
-            display: none;
-        }
-
-        .result-section {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            border-left: 4px solid var(--primary);
+        
+        .suggestion-item {
+            margin: 0.8rem 0;
+            padding: 0.8rem;
             background: white;
             border-radius: 0.5rem;
-        }
-
-        .result-section h3 {
-            margin-bottom: 0.8rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .result-detail {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
         }
         
-      .material-selector {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    flex-wrap: wrap;
-}
+        .material-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
 
-.material-btn {
-    padding: 0.5rem 0.8rem;
-    background: #e9ecef;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
-    color: #495057;
-    border: 1px solid #dee2e6;
-}
+        .material-btn {
+            padding: 0.5rem 0.8rem;
+            background: #e9ecef;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
 
-.material-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
+        .material-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
 
-.material-btn:hover {
-    background: #d8dee6;
-    transform: translateY(-1px);
-}
+        .material-btn:hover {
+            background: #d8dee6;
+            transform: translateY(-1px);
+        }
 
-.material-btn:active {
-    transform: translateY(0);
-}
+        .material-btn:active {
+            transform: translateY(0);
+        }
         
         .error-message {
             color: var(--error);
@@ -539,127 +470,171 @@
             margin-top: 1rem;
         }
         
-        .chart-container {
-            height: 200px;
-            margin-top: 1.5rem;
+        .result-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .result-section h3 {
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .result-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--suction), var(--discharge));
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .section-divider::after {
+            content: 'Bomba';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 1rem;
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: #e9ecef;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
             display: none;
         }
         
-        .chart-container.active {
+        .tab-content.active {
             display: block;
-            animation: fadeIn 0.6s ease;
-        }
-        
-        .toggle-chart {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-        
-        .history-section {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .history-item {
-            background: white;
-            border-radius: 0.8rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .history-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .history-title {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .history-details {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .history-value {
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .empty-history {
-            text-align: center;
-            color: #6c757d;
-            padding: 1rem;
-            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <div class="wave"></div>
         <div class="header">
             <i class="fas fa-water"></i>
             <div>
                 <h1>HydroCalc Recalque</h1>
-                <p class="subtitle">Cálculo completo de vazão e dimensionamento hidráulico</p>
+                <p class="subtitle">Cálculo completo de sucção e recalque com separação de trechos</p>
             </div>
         </div>
 
-        <div class="flow-section">
+        <div class="section">
             <h3><i class="fas fa-tint"></i> 1. Determinação da Vazão</h3>
-            
-            <button type="button" onclick="toggleFlowInput()" class="flow-input-toggle" id="flow-toggle">
-                <i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta
-            </button>
-
-            <div class="flow-calculated" id="flow-calculated">
-                <div class="input-group">
-                    <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
-                    <input type="number" id="population" placeholder="Ex: 15000">
-                    <div class="error-message" id="population-error">Valor inválido</div>
-                </div>
-
-                <div class="input-group">
-                    <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
-                    <input type="number" id="consumption" placeholder="Ex: 200" value="200">
-                    <div class="error-message" id="consumption-error">Valor inválido</div>
-                </div>
-
-                <div class="input-group">
-                    <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
-                    <input type="number" id="time" placeholder="Ex: 16" value="16">
-                    <div class="error-message" id="time-error">Valor inválido (1-24)</div>
-                </div>
+            <div class="flow-toggle-section">
+    <button type="button" onclick="toggleFlowInput()" class="flow-input-toggle" id="flow-toggle">
+        <i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta
+    </button>
+</div>
+          <div class="flow-calculated" id="flow-calculated">
+            <div class="input-group">
+                <label for="population"><i class="fas fa-users"></i> População Atendida (hab)</label>
+                <input type="number" id="population" placeholder="Ex: 15000">
+                <div class="error-message" id="population-error">Valor inválido</div>
             </div>
 
-            <div class="flow-direct" id="flow-direct">
-                <div class="input-group">
-                    <label for="direct-flow"><i class="fas fa-water"></i> Vazão Direta (m³/h)</label>
-                    <input type="number" id="direct-flow" placeholder="Ex: 8.33" step="0.01">
-                    <div class="error-message" id="flow-error">Valor inválido</div>
-                </div>
+            <div class="input-group">
+                <label for="consumption"><i class="fas fa-glass-water"></i> Consumo per capita (L/dia)</label>
+                <input type="number" id="consumption" placeholder="Ex: 200" value="200">
+                <div class="error-message" id="consumption-error">Valor inválido</div>
+            </div>
+
+            <div class="input-group">
+                <label for="time"><i class="fas fa-clock"></i> Tempo de Operação (h/dia)</label>
+                <input type="number" id="time" placeholder="Ex: 16" value="16">
+                <div class="error-message" id="time-error">Valor inválido (1-24)</div>
             </div>
         </div>
+        </div>
+      <div class="flow-direct" id="flow-direct" style="display: none;">
+    <div class="input-group">
+        <label for="direct-flow"><i class="fas fa-water"></i> Vazão Direta (m³/h)</label>
+        <input type="number" id="direct-flow" placeholder="Ex: 8.33" step="0.01">
+        <div class="error-message" id="flow-error">Valor inválido</div>
+    </div>
+</div>
 
-        <h3><i class="fas fa-tools"></i> 2. Parâmetros de Recalque</h3>
-
-        <div class="components-section">
-            <h4><i class="fas fa-tools"></i> Componentes Hidráulicos</h4>
+        <div class="suction-section section">
+            <div class="section-title">
+                <i class="fas fa-arrow-down"></i>
+                <h3>2. Sucção</h3>
+            </div>
+            
+            <div class="input-group">
+                <label for="suction-pipe-length"><i class="fas fa-ruler"></i> Comprimento da Tubulação (m)</label>
+                <input type="number" id="suction-pipe-length" placeholder="Ex: 10">
+                <div class="error-message" id="suction-length-error">Valor inválido</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="suction-pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
+                <input type="number" id="suction-pipe-diameter" placeholder="Ex: 100">
+                <div class="error-message" id="suction-diameter-error">Valor inválido</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="suction-roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
+                <input type="number" id="suction-roughness" step="0.001" 
+                       value="0.0015" 
+                       placeholder="Ex: 0.015">
+                <div class="material-selector">
+                    <button class="material-btn" onclick="setMaterial('pvc', 'suction')">PVC</button>
+                    <button class="material-btn" onclick="setMaterial('aco', 'suction')">Aço</button>
+                    <button class="material-btn" onclick="setMaterial('concreto', 'suction')">Concreto</button>
+                    <button class="material-btn" onclick="setMaterial('cobre', 'suction')">Cobre</button>
+                    <button class="material-btn" onclick="setMaterial('ferro', 'suction')">Ferro Fundido</button>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="suction-static-height"><i class="fas fa-mountain"></i> Altura Estática de Sucção (m)</label>
+                <input type="number" id="suction-static-height" placeholder="Ex: 2.5">
+                <div class="error-message" id="suction-height-error">Valor inválido</div>
+            </div>
+            
+            <h4><i class="fas fa-tools"></i> Componentes Hidráulicos - Sucção</h4>
             
             <div class="component-group">
                 <div class="component-select">
-                    <select id="component-type">
+                    <select id="suction-component-type">
                         <option value="0.9">Cotovelo 90° (K=0.9)</option>
                         <option value="0.4">Cotovelo 45° (K=0.4)</option>
                         <option value="0.2">Cotovelo 22,5° (K=0.2)</option>
@@ -674,82 +649,113 @@
                     </select>
                 </div>
                 <div class="component-qtd">
-                    <input type="number" id="component-qtd" min="0" value="1" placeholder="Qtd">
+                    <input type="number" id="suction-component-qtd" min="0" value="1" placeholder="Qtd">
                 </div>
-                <button type="button" onclick="addComponent()" class="btn-add">
+                <button type="button" onclick="addComponent('suction')" class="btn-add">
                     <i class="fas fa-plus"></i> Adicionar
                 </button>
             </div>
             
-            <div class="components-list" id="components-list"></div>
+            <div class="components-list" id="suction-components-list"></div>
             
             <div class="total-k-display">
-                <span>ΣK Total:</span> 
-                <span id="total-k">0.0</span>
+                <span>ΣK Total Sucção:</span> 
+                <span id="suction-total-k">0.0</span>
             </div>
         </div>
         
-        <div class="input-group">
-            <label for="pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
-            <input type="number" id="pipe-diameter" placeholder="Ex: 150">
-            <div class="error-message" id="diameter-error">Valor inválido</div>
-        </div>
-
-        <div class="input-group">
-            <label for="roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
-            <input type="number" id="roughness" step="0.001" 
-                   value="0.0015" 
-                   placeholder="Ex: 0.015"
-                   pattern="[0-9]+([,\.][0-9]+)?">
-            <div class="unit-hint">
-                <i class="fas fa-info-circle"></i> 
-                PVC = 0.0015mm | Aço = 0.15mm | Concreto = 0.3mm
+        <div class="section-divider"></div>
+        
+        <div class="discharge-section section">
+            <div class="section-title">
+                <i class="fas fa-arrow-up"></i>
+                <h3>3. Recalque</h3>
             </div>
-            <div class="material-selector">
-                <button class="material-btn" onclick="setMaterial('pvc')">PVC</button>
-                <button class="material-btn" onclick="setMaterial('aco')">Aço</button>
-                <button class="material-btn" onclick="setMaterial('concreto')">Concreto</button>
-                <button class="material-btn" onclick="setMaterial('cobre')">Cobre</button>
-                <button class="material-btn" onclick="setMaterial('ferro')">Ferro Fundido</button>
+            
+            <div class="input-group">
+                <label for="discharge-pipe-length"><i class="fas fa-ruler"></i> Comprimento da Tubulação (m)</label>
+                <input type="number" id="discharge-pipe-length" placeholder="Ex: 500">
+                <div class="error-message" id="discharge-length-error">Valor inválido</div>
             </div>
-        </div>
-
-        <div class="input-group">
-            <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
-            <input type="number" id="viscosity" step="1e-7" 
-                   value="0.000001" 
-                   placeholder="Ex: 1e-6"
-                   pattern="[0-9]e-[0-9]">
-            <div class="unit-hint">
-                <i class="fas fa-info-circle"></i> 
-                Água a 20°C = 1e-6 m²/s | Água a 40°C = 0.66e-6 m²/s
+            
+            <div class="input-group">
+                <label for="discharge-pipe-diameter"><i class="fas fa-pipe"></i> Diâmetro da Tubulação (mm)</label>
+                <input type="number" id="discharge-pipe-diameter" placeholder="Ex: 150">
+                <div class="error-message" id="discharge-diameter-error">Valor inválido</div>
             </div>
-        </div>
-
-        <div class="input-group">
-            <label for="local-losses"><i class="fas fa-water"></i> Perdas Localizadas Adicionais (ΣK)</label>
-            <input type="number" id="local-losses" placeholder="Ex: 2.5 (outras perdas)" step="0.1" value="0">
-            <div class="unit-hint">
-                <i class="fas fa-info-circle"></i> 
-                Perdas não incluídas na lista acima
+            
+            <div class="input-group">
+                <label for="discharge-roughness"><i class="fas fa-hill-rockslide"></i> Rugosidade Absoluta (mm)</label>
+                <input type="number" id="discharge-roughness" step="0.001" 
+                       value="0.0015" 
+                       placeholder="Ex: 0.015">
+                <div class="material-selector">
+                    <button class="material-btn" onclick="setMaterial('pvc', 'discharge')">PVC</button>
+                    <button class="material-btn" onclick="setMaterial('aco', 'discharge')">Aço</button>
+                    <button class="material-btn" onclick="setMaterial('concreto', 'discharge')">Concreto</button>
+                    <button class="material-btn" onclick="setMaterial('cobre', 'discharge')">Cobre</button>
+                    <button class="material-btn" onclick="setMaterial('ferro', 'discharge')">Ferro Fundido</button>
+                </div>
             </div>
-        </div>
-
-        <div class="input-group">
-            <label for="static-height"><i class="fas fa-mountain"></i> Altura Estática (m)</label>
-            <input type="number" id="static-height" placeholder="Ex: 30">
-            <div class="error-message" id="height-error">Valor inválido</div>
-        </div>
-
-        <div class="input-group">
-            <label for="pipe-length"><i class="fas fa-ruler"></i> Comprimento da Tubulação (m)</label>
-            <input type="number" id="pipe-length" placeholder="Ex: 500">
-            <div class="error-message" id="length-error">Valor inválido</div>
+            
+            <div class="input-group">
+                <label for="discharge-static-height"><i class="fas fa-mountain"></i> Altura Estática de Recalque (m)</label>
+                <input type="number" id="discharge-static-height" placeholder="Ex: 30">
+                <div class="error-message" id="discharge-height-error">Valor inválido</div>
+            </div>
+            
+            <h4><i class="fas fa-tools"></i> Componentes Hidráulicos - Recalque</h4>
+            
+            <div class="component-group">
+                <div class="component-select">
+                    <select id="discharge-component-type">
+                        <option value="0.9">Cotovelo 90° (K=0.9)</option>
+                        <option value="0.4">Cotovelo 45° (K=0.4)</option>
+                        <option value="0.2">Cotovelo 22,5° (K=0.2)</option>
+                        <option value="10">Válvula de retenção (K=10)</option>
+                        <option value="0.2">Válvula de gaveta aberta (K=0.2)</option>
+                        <option value="5.6">Válvula borboleta (K=5.6)</option>
+                        <option value="8.5">Válvula globo (K=8.5)</option>
+                        <option value="1.5">Tê passagem lateral (K=1.5)</option>
+                        <option value="0.6">Tê passagem direta (K=0.6)</option>
+                        <option value="1.8">Redução cônica (K=1.8)</option>
+                        <option value="15">Válvula de pé com crivo (K=15)</option>
+                    </select>
+                </div>
+                <div class="component-qtd">
+                    <input type="number" id="discharge-component-qtd" min="0" value="1" placeholder="Qtd">
+                </div>
+                <button type="button" onclick="addComponent('discharge')" class="btn-add">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
+            </div>
+            
+            <div class="components-list" id="discharge-components-list"></div>
+            
+            <div class="total-k-display">
+                <span>ΣK Total Recalque:</span> 
+                <span id="discharge-total-k">0.0</span>
+            </div>
         </div>
         
-        <div class="input-group">
-            <label for="efficiency"><i class="fas fa-percentage"></i> Eficiência da Bomba (%)</label>
-            <input type="number" id="efficiency" placeholder="Ex: 70" value="70" min="1" max="100">
+        <div class="section">
+            <h3><i class="fas fa-bolt"></i> 4. Parâmetros Gerais</h3>
+            
+            <div class="input-group">
+                <label for="viscosity"><i class="fas fa-flask"></i> Viscosidade Cinemática (m²/s)</label>
+                <input type="number" id="viscosity" step="1e-7" 
+                       value="0.000001" 
+                       placeholder="Ex: 1e-6">
+                <div class="result-unit">
+                    <i class="fas fa-info-circle"></i> 
+                    Água a 20°C = 1e-6 m²/s | Água a 40°C = 0.66e-6 m²/s
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="efficiency"><i class="fas fa-percentage"></i> Eficiência da Bomba (%)</label>
+                <input type="number" id="efficiency" placeholder="Ex: 70" value="70" min="1" max="100">
+            </div>
         </div>
 
         <button onclick="calculateFullSystem()">
@@ -768,43 +774,68 @@
             <h2><i class="fas fa-chart-line"></i> Resultados do Sistema</h2>
             
             <div class="result-section">
-                <h3><i class="fas fa-tint"></i> Vazão e Velocidade</h3>
+                <h3><i class="fas fa-tint"></i> Vazão de Projeto</h3>
                 <div class="result-detail">
-                    <span>Vazão de Projeto:</span>
+                    <span>Vazão:</span>
                     <span class="result-value" id="flow-result">0,00</span> m³/h
                 </div>
-                <div class="result-detail">
-                    <span>Velocidade do Fluxo:</span>
-                    <span id="velocity-result">0,00</span> m/s
-                    <span class="velocity-indicator" id="velocity-indicator"></span>
-                </div>
             </div>
-
+            
             <div class="result-section">
-                <h3><i class="fas fa-arrow-down"></i> Perdas de Carga</h3>
+                <h3><i class="fas fa-arrow-down"></i> Sucção</h3>
+                <div class="result-detail">
+                    <span>Velocidade:</span>
+                    <span id="suction-velocity">0,00</span> m/s
+                    <span class="velocity-indicator" id="suction-velocity-indicator"></span>
+                </div>
                 <div class="result-detail">
                     <span>Perda Contínua (hf):</span>
-                    <span id="continuous-loss">0,00</span> m
+                    <span id="suction-continuous-loss">0,00</span> m
                 </div>
                 <div class="result-detail">
                     <span>Perda Localizada (hl):</span>
-                    <span id="local-loss">0,00</span> m
+                    <span id="suction-local-loss">0,00</span> m
                 </div>
                 <div class="result-detail">
                     <span>Perda Total:</span>
-                    <span id="total-loss">0,00</span> m
+                    <span id="suction-total-loss">0,00</span> m
                 </div>
             </div>
-
+            
+            <div class="result-section">
+                <h3><i class="fas fa-arrow-up"></i> Recalque</h3>
+                <div class="result-detail">
+                    <span>Velocidade:</span>
+                    <span id="discharge-velocity">0,00</span> m/s
+                    <span class="velocity-indicator" id="discharge-velocity-indicator"></span>
+                </div>
+                <div class="result-detail">
+                    <span>Perda Contínua (hf):</span>
+                    <span id="discharge-continuous-loss">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Perda Localizada (hl):</span>
+                    <span id="discharge-local-loss">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Perda Total:</span>
+                    <span id="discharge-total-loss">0,00</span> m
+                </div>
+            </div>
+            
             <div class="result-section">
                 <h3><i class="fas fa-mountain"></i> Alturas Manométricas</h3>
                 <div class="result-detail">
-                    <span>Altura Estática:</span>
-                    <span id="static-head">0,00</span> m
+                    <span>Altura Estática Sucção:</span>
+                    <span id="suction-static-head">0,00</span> m
                 </div>
                 <div class="result-detail">
-                    <span>Altura Dinâmica:</span>
-                    <span id="dynamic-head">0,00</span> m
+                    <span>Altura Estática Recalque:</span>
+                    <span id="discharge-static-head">0,00</span> m
+                </div>
+                <div class="result-detail">
+                    <span>Perda Total (Sucção + Recalque):</span>
+                    <span id="total-loss">0,00</span> m
                 </div>
                 <div class="result-detail">
                     <span><strong>Altura Manométrica Total:</strong></span>
@@ -820,16 +851,6 @@
                 </div>
                 <p class="result-unit">* Eficiência considerada: <span id="efficiency-value">70</span>%</p>
             </div>
-            
-            <div class="toggle-chart">
-                <button class="flow-input-toggle" onclick="toggleChart()">
-                    <i class="fas fa-chart-pie"></i> Ver Gráfico de Perdas
-                </button>
-            </div>
-            
-            <div class="chart-container" id="chart-container">
-                <canvas id="losses-chart"></canvas>
-            </div>
         </div>
 
         <div class="suggestions" id="suggestions">
@@ -843,23 +864,16 @@
                 <span id="suggested-head">0</span> m (+15%)
             </div>
             <div class="suggestion-item">
-                <strong>Fator de Atrito:</strong>
-                <span id="friction-factor">0</span>
-            </div>
-            <div class="suggestion-item">
                 <strong>Potência Comercial Próxima:</strong>
                 <span id="suggested-power">0</span> kW
             </div>
-            <div class="suggestion-item" id="velocity-suggestion">
-                <strong>Velocidade:</strong>
-                <span id="velocity-status">Dentro da faixa recomendada</span>
+            <div class="suggestion-item" id="suction-velocity-suggestion">
+                <strong>Velocidade Sucção:</strong>
+                <span id="suction-velocity-status">Dentro da faixa recomendada</span>
             </div>
-        </div>
-        
-        <div class="history-section" id="history-section">
-            <h3><i class="fas fa-history"></i> Histórico de Cálculos</h3>
-            <div id="history-list" class="empty-history">
-                Nenhum cálculo realizado ainda
+            <div class="suggestion-item" id="discharge-velocity-suggestion">
+                <strong>Velocidade Recalque:</strong>
+                <span id="discharge-velocity-status">Dentro da faixa recomendada</span>
             </div>
         </div>
         
@@ -868,7 +882,6 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Material roughness values
     const materials = {
@@ -879,19 +892,19 @@
         ferro: 0.25
     };
     
-    let totalK = 0;
-    const components = [];
-    let flowInputMode = 'calculated';
-    let calculationHistory = [];
+    let componentsSuction = [];
+    let totalKSucction = 0;
     
-    // Chart instance
-    let lossesChart = null;
+    let componentsDischarge = [];
+    let totalKDischarge = 0;
+    let flowInputMode = 'calculated'; // Padrão: cálculo automático
 
-    function setMaterial(type) {
-        document.getElementById('roughness').value = materials[type];
+    function setMaterial(type, section) {
+        document.getElementById(section + '-roughness').value = materials[type];
         
         // Highlight selected button
-        document.querySelectorAll('.material-btn').forEach(btn => {
+        const buttons = document.querySelectorAll('#' + section + '-roughness ~ .material-selector .material-btn');
+        buttons.forEach(btn => {
             btn.classList.remove('active');
         });
         event.target.classList.add('active');
@@ -906,7 +919,7 @@
             flowInputMode = 'direct';
             calculated.style.display = 'none';
             direct.style.display = 'block';
-            button.innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Cálculo por Parâmetros';
+            button.innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Cálculo Automático';
         } else {
             flowInputMode = 'calculated';
             calculated.style.display = 'block';
@@ -915,24 +928,32 @@
         }
     }
 
-    function addComponent() {
-        const type = document.getElementById('component-type');
-        const qtd = parseInt(document.getElementById('component-qtd').value) || 0;
+    function addComponent(section) {
+        const type = document.getElementById(section + '-component-type');
+        const qtd = parseInt(document.getElementById(section + '-component-qtd').value) || 0;
         const kValue = parseFloat(type.value);
         const componentName = type.options[type.selectedIndex].text.split(' (')[0];
         
         if(qtd > 0) {
-            components.push({name: componentName, qtd: qtd, k: kValue});
-            totalK += kValue * qtd;
-            updateComponentsList();
-            document.getElementById('component-qtd').value = 1; // Reseta para 1
-            updateTotalKInForm();
+            if (section === 'suction') {
+                componentsSuction.push({name: componentName, qtd: qtd, k: kValue});
+                totalKSucction += kValue * qtd;
+                updateComponentsList(section);
+                document.getElementById('suction-component-qtd').value = 1;
+                document.getElementById('suction-total-k').textContent = totalKSucction.toFixed(1);
+            } else {
+                componentsDischarge.push({name: componentName, qtd: qtd, k: kValue});
+                totalKDischarge += kValue * qtd;
+                updateComponentsList(section);
+                document.getElementById('discharge-component-qtd').value = 1;
+                document.getElementById('discharge-total-k').textContent = totalKDischarge.toFixed(1);
+            }
         }
     }
 
-    function updateComponentsList() {
-        const list = document.getElementById('components-list');
-        const totalSpan = document.getElementById('total-k');
+    function updateComponentsList(section) {
+        const list = document.getElementById(section + '-components-list');
+        const components = section === 'suction' ? componentsSuction : componentsDischarge;
         
         list.innerHTML = components.map((c, index) => `
             <div class="suggestion-item">
@@ -940,26 +961,25 @@
                     <strong>${c.qtd}x ${c.name}</strong>
                     <div style="font-size:0.8rem;color:#6c757d;">K = ${c.k}</div>
                 </div>
-                <button onclick="removeComponent(${index})" class="btn-remove">
+                <button onclick="removeComponent('${section}', ${index})" class="btn-remove">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         `).join('');
-        
-        totalSpan.textContent = totalK.toFixed(1);
     }
 
-    function removeComponent(index) {
-        totalK -= components[index].k * components[index].qtd;
-        components.splice(index, 1);
-        updateComponentsList();
-        updateTotalKInForm();
-    }
-
-    function updateTotalKInForm() {
-        // Atualiza o campo de perdas localizadas automaticamente
-        const currentAdditional = parseFloat(document.getElementById('local-losses').value) || 0;
-        // Não sobrescreve o valor adicional, apenas mantém o total visível
+    function removeComponent(section, index) {
+        if (section === 'suction') {
+            totalKSucction -= componentsSuction[index].k * componentsSuction[index].qtd;
+            componentsSuction.splice(index, 1);
+            updateComponentsList(section);
+            document.getElementById('suction-total-k').textContent = totalKSucction.toFixed(1);
+        } else {
+            totalKDischarge -= componentsDischarge[index].k * componentsDischarge[index].qtd;
+            componentsDischarge.splice(index, 1);
+            updateComponentsList(section);
+            document.getElementById('discharge-total-k').textContent = totalKDischarge.toFixed(1);
+        }
     }
     
     function resetForm() {
@@ -968,23 +988,43 @@
         document.getElementById('consumption').value = '200';
         document.getElementById('time').value = '16';
         document.getElementById('direct-flow').value = '';
-        document.getElementById('pipe-diameter').value = '';
-        document.getElementById('roughness').value = '0.0015';
+        
+        // Suction fields
+        document.getElementById('suction-pipe-length').value = '';
+        document.getElementById('suction-pipe-diameter').value = '';
+        document.getElementById('suction-roughness').value = '0.0015';
+        document.getElementById('suction-static-height').value = '';
+        
+        // Discharge fields
+        document.getElementById('discharge-pipe-length').value = '';
+        document.getElementById('discharge-pipe-diameter').value = '';
+        document.getElementById('discharge-roughness').value = '0.0015';
+        document.getElementById('discharge-static-height').value = '';
+        
+        // General fields
         document.getElementById('viscosity').value = '0.000001';
-        document.getElementById('local-losses').value = '0';
-        document.getElementById('static-height').value = '';
-        document.getElementById('pipe-length').value = '';
         document.getElementById('efficiency').value = '70';
         
         // Clear components
-        components.length = 0;
-        totalK = 0;
-        updateComponentsList();
+        componentsSuction = [];
+        totalKSucction = 0;
+        updateComponentsList('suction');
+        document.getElementById('suction-total-k').textContent = '0.0';
+        
+        componentsDischarge = [];
+        totalKDischarge = 0;
+        updateComponentsList('discharge');
+        document.getElementById('discharge-total-k').textContent = '0.0';
+        
+        // Reset flow input mode
+        flowInputMode = 'calculated';
+        document.getElementById('flow-calculated').style.display = 'block';
+        document.getElementById('flow-direct').style.display = 'none';
+        document.getElementById('flow-toggle').innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Vazão Direta';
         
         // Hide results
         document.getElementById('result').classList.remove('active');
         document.getElementById('suggestions').classList.remove('active');
-        document.getElementById('chart-container').classList.remove('active');
         
         // Reset material buttons
         document.querySelectorAll('.material-btn').forEach(btn => {
@@ -1033,23 +1073,43 @@
             }
         }
         
-        // Validate recalque parameters
-        const diameter = parseFloat(document.getElementById('pipe-diameter').value);
-        const height = parseFloat(document.getElementById('static-height').value);
-        const length = parseFloat(document.getElementById('pipe-length').value);
+        // Validate suction parameters
+        const suctionLength = parseFloat(document.getElementById('suction-pipe-length').value);
+        const suctionDiameter = parseFloat(document.getElementById('suction-pipe-diameter').value);
+        const suctionHeight = parseFloat(document.getElementById('suction-static-height').value);
         
-        if (!diameter || diameter <= 0) {
-            document.getElementById('diameter-error').style.display = 'block';
+        if (!suctionLength || suctionLength <= 0) {
+            document.getElementById('suction-length-error').style.display = 'block';
             isValid = false;
         }
         
-        if (!height || height <= 0) {
-            document.getElementById('height-error').style.display = 'block';
+        if (!suctionDiameter || suctionDiameter <= 0) {
+            document.getElementById('suction-diameter-error').style.display = 'block';
             isValid = false;
         }
         
-        if (!length || length <= 0) {
-            document.getElementById('length-error').style.display = 'block';
+        if (!suctionHeight || suctionHeight <= 0) {
+            document.getElementById('suction-height-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        // Validate discharge parameters
+        const dischargeLength = parseFloat(document.getElementById('discharge-pipe-length').value);
+        const dischargeDiameter = parseFloat(document.getElementById('discharge-pipe-diameter').value);
+        const dischargeHeight = parseFloat(document.getElementById('discharge-static-height').value);
+        
+        if (!dischargeLength || dischargeLength <= 0) {
+            document.getElementById('discharge-length-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!dischargeDiameter || dischargeDiameter <= 0) {
+            document.getElementById('discharge-diameter-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!dischargeHeight || dischargeHeight <= 0) {
+            document.getElementById('discharge-height-error').style.display = 'block';
             isValid = false;
         }
         
@@ -1079,69 +1139,89 @@
 
                     const dailyDemand = population * consumption; // L/dia
                     Q_lps = dailyDemand / (time * 3600); // L/s
-                    Q_m3h = Q_lps * 3.6; // m³/h (conversão correta: L/s * 3.6 = m³/h)
+                    Q_m3h = Q_lps * 3.6; // m³/h
                 }
 
-                // ETAPA 2: Cálculo do Recalque
-                const D = parseFloat(document.getElementById('pipe-diameter').value) / 1000; // mm para m
-                const ε = parseFloat(document.getElementById('roughness').value) / 1000; // mm para m
+                // ETAPA 2: Cálculo da Sucção
+                const L_suc = parseFloat(document.getElementById('suction-pipe-length').value);
+                const D_suc = parseFloat(document.getElementById('suction-pipe-diameter').value) / 1000; // mm para m
+                const ε_suc = parseFloat(document.getElementById('suction-roughness').value) / 1000; // mm para m
+                const H_suc = parseFloat(document.getElementById('suction-static-height').value);
                 const ν = parseFloat(document.getElementById('viscosity').value) || 1e-6;
-                const L = parseFloat(document.getElementById('pipe-length').value);
-                const H_stat = parseFloat(document.getElementById('static-height').value);
-                const K_additional = parseFloat(document.getElementById('local-losses').value) || 0;
-                const K_total = totalK + K_additional; // Soma os componentes + perdas adicionais
-                const efficiency = parseFloat(document.getElementById('efficiency').value) || 70;
                 const g = 9.81;
 
-                // Cálculos hidráulicos
-                const A = Math.PI * Math.pow(D/2, 2); // Área da seção transversal
-                const V = (Q_lps / 1000) / A; // Velocidade (convertendo L/s para m³/s)
-                const Re = (V * D) / ν; // Número de Reynolds
+                // Cálculos hidráulicos para sucção
+                const A_suc = Math.PI * Math.pow(D_suc/2, 2); // Área da seção transversal
+                const V_suc = (Q_lps / 1000) / A_suc; // Velocidade (convertendo L/s para m³/s)
+                const Re_suc = (V_suc * D_suc) / ν; // Número de Reynolds
 
                 // Cálculo do fator de atrito (Swamee-Jain)
-                const term1 = Math.pow(ε/D / 3.7, 1.11);
-                const term2 = 6.9 / Re;
-                const f = Math.pow(-1.8 * Math.log10(term1 + term2), -2);
+                const term1_suc = Math.pow(ε_suc/D_suc / 3.7, 1.11);
+                const term2_suc = 6.9 / Re_suc;
+                const f_suc = Math.pow(-1.8 * Math.log10(term1_suc + term2_suc), -2);
 
-                // Perdas de carga
-                const hf = f * (L/D) * (Math.pow(V, 2)/(2*g)); // Perda contínua
-                const h_local = K_total * (Math.pow(V, 2)/(2*g)); // Perda localizada
-                const h_total = hf + h_local; // Perda total
-                const H_total = H_stat + h_total; // Altura manométrica total
+                // Perdas de carga na sucção
+                const hf_suc = f_suc * (L_suc/D_suc) * (Math.pow(V_suc, 2)/(2*g)); // Perda contínua
+                const h_local_suc = totalKSucction * (Math.pow(V_suc, 2)/(2*g)); // Perda localizada
+                const h_total_suc = hf_suc + h_local_suc; // Perda total na sucção
 
-                // Potência da bomba
+                // ETAPA 3: Cálculo do Recalque
+                const L_dis = parseFloat(document.getElementById('discharge-pipe-length').value);
+                const D_dis = parseFloat(document.getElementById('discharge-pipe-diameter').value) / 1000; // mm para m
+                const ε_dis = parseFloat(document.getElementById('discharge-roughness').value) / 1000; // mm para m
+                const H_dis = parseFloat(document.getElementById('discharge-static-height').value);
+
+                // Cálculos hidráulicos para recalque
+                const A_dis = Math.PI * Math.pow(D_dis/2, 2); // Área da seção transversal
+                const V_dis = (Q_lps / 1000) / A_dis; // Velocidade (convertendo L/s para m³/s)
+                const Re_dis = (V_dis * D_dis) / ν; // Número de Reynolds
+
+                // Cálculo do fator de atrito (Swamee-Jain)
+                const term1_dis = Math.pow(ε_dis/D_dis / 3.7, 1.11);
+                const term2_dis = 6.9 / Re_dis;
+                const f_dis = Math.pow(-1.8 * Math.log10(term1_dis + term2_dis), -2);
+
+                // Perdas de carga no recalque
+                const hf_dis = f_dis * (L_dis/D_dis) * (Math.pow(V_dis, 2)/(2*g)); // Perda contínua
+                const h_local_dis = totalKDischarge * (Math.pow(V_dis, 2)/(2*g)); // Perda localizada
+                const h_total_dis = hf_dis + h_local_dis; // Perda total no recalque
+
+                // Cálculo da altura manométrica total e potência
+                const h_total = h_total_suc + h_total_dis; // Perda total
+                const H_total = H_suc + H_dis + h_total; // Altura manométrica total
+                const efficiency = parseFloat(document.getElementById('efficiency').value) || 70;
                 const P = ((Q_lps / 1000) * 1000 * 9.81 * H_total) / ((efficiency/100) * 1000); // kW
 
                 // Exibir resultados
                 document.getElementById('flow-result').textContent = formatNumber(Q_m3h);
-                document.getElementById('velocity-result').textContent = formatNumber(V);
-                document.getElementById('continuous-loss').textContent = formatNumber(hf);
-                document.getElementById('local-loss').textContent = formatNumber(h_local);
+                
+                // Sucção
+                document.getElementById('suction-velocity').textContent = formatNumber(V_suc);
+                document.getElementById('suction-continuous-loss').textContent = formatNumber(hf_suc);
+                document.getElementById('suction-local-loss').textContent = formatNumber(h_local_suc);
+                document.getElementById('suction-total-loss').textContent = formatNumber(h_total_suc);
+                document.getElementById('suction-static-head').textContent = formatNumber(H_suc);
+                
+                // Recalque
+                document.getElementById('discharge-velocity').textContent = formatNumber(V_dis);
+                document.getElementById('discharge-continuous-loss').textContent = formatNumber(hf_dis);
+                document.getElementById('discharge-local-loss').textContent = formatNumber(h_local_dis);
+                document.getElementById('discharge-total-loss').textContent = formatNumber(h_total_dis);
+                document.getElementById('discharge-static-head').textContent = formatNumber(H_dis);
+                
+                // Totais
                 document.getElementById('total-loss').textContent = formatNumber(h_total);
-                document.getElementById('static-head').textContent = formatNumber(H_stat);
-                document.getElementById('dynamic-head').textContent = formatNumber(h_total);
                 document.getElementById('total-head').textContent = formatNumber(H_total);
                 document.getElementById('pump-power').textContent = formatNumber(P);
-                document.getElementById('friction-factor').textContent = f.toFixed(4);
                 document.getElementById('efficiency-value').textContent = efficiency;
                 document.getElementById('result').classList.add('active');
 
                 // Sugestões e verificações
-                calculateSafetyMargins(Q_m3h, H_total, P, f, V);
-                document.getElementById('suggestions').classList.add('active');
+                calculateSafetyMargins(Q_m3h, H_total, P);
                 
-                // Update velocity indicator
-                updateVelocityIndicator(V);
-                
-                // Add to history
-                addToHistory({
-                    flow: Q_m3h,
-                    head: H_total,
-                    power: P,
-                    diameter: D * 1000,
-                    length: L,
-                    date: new Date()
-                });
+                // Update velocity indicators
+                updateVelocityIndicator(V_suc, 'suction');
+                updateVelocityIndicator(V_dis, 'discharge');
                 
             } catch (error) {
                 showError('Ocorreu um erro no cálculo: ' + error.message);
@@ -1152,31 +1232,38 @@
         }, 100);
     }
     
-    function updateVelocityIndicator(velocity) {
-        const indicator = document.getElementById('velocity-indicator');
-        const suggestion = document.getElementById('velocity-suggestion');
+    function updateVelocityIndicator(velocity, section) {
+        const indicator = document.getElementById(section + '-velocity-indicator');
+        const suggestion = document.getElementById(section + '-velocity-suggestion');
+        const status = document.getElementById(section + '-velocity-status');
         
         indicator.className = 'velocity-indicator';
         
-        if (velocity < 0.5) {
+        // Valores recomendados diferentes para sucção e recalque
+        const minRecommended = section === 'suction' ? 0.6 : 0.8;
+        const maxRecommended = section === 'suction' ? 1.5 : 2.5;
+        
+        if (velocity < minRecommended) {
             indicator.classList.add('danger');
-            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--error)">Muito baixa (risco de sedimentação)</span>';
-        } else if (velocity < 1.0) {
+            status.innerHTML = '<span style="color:var(--error)">Muito baixa (risco de sedimentação)</span>';
+        } else if (velocity < minRecommended + 0.2) {
             indicator.classList.add('warning');
-            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--warning)">Baixa (pode causar sedimentação)</span>';
-        } else if (velocity > 2.5) {
+            status.innerHTML = '<span style="color:var(--warning)">Baixa (pode causar sedimentação)</span>';
+        } else if (velocity > maxRecommended) {
             indicator.classList.add('danger');
-            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--error)">Muito alta (risco de erosão e ruído)</span>';
-        } else if (velocity > 1.8) {
+            status.innerHTML = '<span style="color:var(--error)">Muito alta (risco de erosão e ruído)</span>';
+        } else if (velocity > maxRecommended - 0.3) {
             indicator.classList.add('warning');
-            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--warning)">Alta (pode causar ruído)</span>';
+            status.innerHTML = '<span style="color:var(--warning)">Alta (pode causar ruído)</span>';
         } else {
             indicator.classList.add('success');
-            suggestion.innerHTML = '<strong>Velocidade:</strong> <span style="color:var(--success)">Dentro da faixa recomendada</span>';
+            status.innerHTML = '<span style="color:var(--success)">Dentro da faixa recomendada</span>';
         }
+        
+        suggestion.style.display = 'flex';
     }
 
-    function calculateSafetyMargins(flow, head, power, f, velocity) {
+    function calculateSafetyMargins(flow, head, power) {
         const suggestedFlow = flow * 1.10;
         const suggestedHead = head * 1.15;
 
@@ -1189,129 +1276,7 @@
         const found = commercialPowers.find(p => p >= needed) || '>500';
         
         document.getElementById('suggested-power').textContent = found;
-    }
-    
-    function addToHistory(calculation) {
-        calculationHistory.unshift(calculation);
-        if (calculationHistory.length > 5) {
-            calculationHistory.pop();
-        }
-        updateHistoryList();
-    }
-    
-    function updateHistoryList() {
-        const historyList = document.getElementById('history-list');
-        
-        if (calculationHistory.length === 0) {
-            historyList.className = 'empty-history';
-            historyList.innerHTML = 'Nenhum cálculo realizado ainda';
-            return;
-        }
-        
-        historyList.className = '';
-        historyList.innerHTML = calculationHistory.map((calc, index) => `
-            <div class="history-item" onclick="loadFromHistory(${index})">
-                <div class="history-title">
-                    <span>Cálculo #${index + 1}</span>
-                    <span>${calc.date.toLocaleTimeString()}</span>
-                </div>
-                <div class="history-details">
-                    <div>
-                        <div>Vazão</div>
-                        <div class="history-value">${formatNumber(calc.flow)} m³/h</div>
-                    </div>
-                    <div>
-                        <div>Altura</div>
-                        <div class="history-value">${formatNumber(calc.head)} m</div>
-                    </div>
-                    <div>
-                        <div>Potência</div>
-                        <div class="history-value">${formatNumber(calc.power)} kW</div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function loadFromHistory(index) {
-        const calc = calculationHistory[index];
-        if (!calc) return;
-        
-        // Set flow mode to direct and populate
-        flowInputMode = 'direct';
-        document.getElementById('flow-calculated').style.display = 'none';
-        document.getElementById('flow-direct').style.display = 'block';
-        document.getElementById('flow-toggle').innerHTML = '<i class="fas fa-exchange-alt"></i> Alternar para Cálculo por Parâmetros';
-        document.getElementById('direct-flow').value = calc.flow;
-        
-        // Populate other fields
-        document.getElementById('pipe-diameter').value = calc.diameter;
-        document.getElementById('static-height').value = calc.head;
-        document.getElementById('pipe-length').value = calc.length;
-        
-        // Recalculate
-        calculateFullSystem();
-    }
-    
-    function toggleChart() {
-        const container = document.getElementById('chart-container');
-        container.classList.toggle('active');
-        
-        if (container.classList.contains('active') && !lossesChart) {
-            renderLossesChart();
-        }
-    }
-    
-    function renderLossesChart() {
-        const ctx = document.getElementById('losses-chart').getContext('2d');
-        const staticHead = parseFloat(document.getElementById('static-head').textContent) || 0;
-        const continuousLoss = parseFloat(document.getElementById('continuous-loss').textContent) || 0;
-        const localLoss = parseFloat(document.getElementById('local-loss').textContent) || 0;
-        
-        lossesChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Altura Estática', 'Perdas Contínuas', 'Perdas Localizadas'],
-                datasets: [{
-                    data: [staticHead, continuousLoss, localLoss],
-                    backgroundColor: [
-                        '#4361ee',
-                        '#4cc9f0',
-                        '#3a0ca3'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 12
-                            },
-                            padding: 20
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Distribuição da Altura Manométrica',
-                        font: {
-                            size: 14
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.label}: ${formatNumber(context.parsed)} m (${Math.round(context.parsed/(staticHead+continuousLoss+localLoss)*100)}%)`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        document.getElementById('suggestions').classList.add('active');
     }
 
     function formatNumber(num) {
@@ -1329,7 +1294,8 @@
     
     // Initialize material buttons
     document.addEventListener('DOMContentLoaded', function() {
-        setMaterial('pvc');
+        setMaterial('pvc', 'suction');
+        setMaterial('pvc', 'discharge');
     });
 </script>
 </body>
